@@ -192,8 +192,61 @@ const ZONES = [
 const LEVEL_INFO = [
   { level:1, name:'Rune Recognition', thai:'จดจำรูน',    desc:'เห็นรูป → เลือกคำ',      icon:'👁️' },
   { level:2, name:'Ancient Whispers', thai:'เสียงลึกลับ', desc:'ได้ยินเสียง → เลือกคำ',  icon:'👂' },
-  { level:3, name:'Spell Recall',     thai:'สะกดรหัส',   desc:'เห็นรูป → เติมตัวอักษร', icon:'✍️' },
+  { level:3, name:'Spell Recall',     thai:'สะกดรหัส',   desc:'เห็นรูป → พิมพ์คำเอง',    icon:'✍️' },
 ];
+
+/* ════ ISLAND / SHOP ════ */
+const SHOP_CATS = [
+  { id:'all',      label:'ทั้งหมด',        emoji:'🛍️' },
+  { id:'nature',   label:'ธรรมชาติ',       emoji:'🌿' },
+  { id:'building', label:'สิ่งปลูกสร้าง',  emoji:'🏗️' },
+  { id:'deco',     label:'ของตกแต่ง',      emoji:'✨' },
+  { id:'animal',   label:'สัตว์เลี้ยง',    emoji:'🐾' },
+  { id:'furniture',label:'เฟอร์นิเจอร์',  emoji:'🪑' },
+];
+
+const SHOP_ITEMS = [
+  {id:'palm',    name:'ต้นปาล์ม',       emoji:'🌴', price:50,  cat:'nature',   desc:'สัญลักษณ์แห่งเกาะ'},
+  {id:'flower',  name:'ดอกซากุระ',      emoji:'🌸', price:30,  cat:'nature',   desc:'ดอกไม้สีชมพูนำโชค'},
+  {id:'cactus',  name:'กระบองเพชร',     emoji:'🌵', price:40,  cat:'nature',   desc:'ทนทุกสภาพอากาศ'},
+  {id:'rock',    name:'หินโบราณ',       emoji:'🪨', price:20,  cat:'nature',   desc:'หินจากก้นทะเล'},
+  {id:'tree',    name:'ต้นไม้ใหญ่',     emoji:'🌳', price:60,  cat:'nature',   desc:'ร่มเงาพักผ่อน'},
+  {id:'mushroom',name:'เห็ดวิเศษ',      emoji:'🍄', price:35,  cat:'nature',   desc:'เห็ดจากป่าลึกลับ'},
+  {id:'sunflower',name:'ทานตะวัน',      emoji:'🌻', price:45,  cat:'nature',   desc:'แสงแห่งความหวัง'},
+  {id:'house',   name:'บ้านนักสำรวจ',   emoji:'🏠', price:200, cat:'building', desc:'บ้านพักบนเกาะ'},
+  {id:'cabin',   name:'กระท่อมป่า',     emoji:'🏕️', price:150, cat:'building', desc:'กระท่อมกลางดง'},
+  {id:'castle',  name:'ปราสาทโบราณ',   emoji:'🏰', price:500, cat:'building', desc:'ปราสาทลึกลับ'},
+  {id:'tent',    name:'เต็นท์ผจญภัย',  emoji:'⛺', price:100, cat:'building', desc:'เต็นท์สำรวจโลก'},
+  {id:'lighthouse',name:'ประภาคาร',     emoji:'🗼', price:300, cat:'building', desc:'ส่องทางในทะเลมืด'},
+  {id:'fountain',name:'น้ำพุวิเศษ',     emoji:'⛲', price:150, cat:'deco',     desc:'น้ำพุพลังลึกลับ'},
+  {id:'lantern', name:'โคมไฟโบราณ',    emoji:'🏮', price:80,  cat:'deco',     desc:'ส่องทางยามค่ำ'},
+  {id:'flag',    name:'ธงนักสำรวจ',     emoji:'🚩', price:30,  cat:'deco',     desc:'ธงแห่งชัยชนะ'},
+  {id:'chest',   name:'หีบสมบัติ',      emoji:'📦', price:300, cat:'deco',     desc:'บรรจุสมบัติโบราณ'},
+  {id:'campfire',name:'กองไฟ',          emoji:'🔥', price:60,  cat:'deco',     desc:'ไออุ่นยามค่ำคืน'},
+  {id:'sign',    name:'ป้ายบอกทาง',     emoji:'🪧', price:40,  cat:'deco',     desc:'นำทางบนเกาะ'},
+  {id:'cat_p',   name:'แมวเกาะ',        emoji:'🐱', price:120, cat:'animal',   desc:'แมวน่ารักประจำเกาะ'},
+  {id:'dog_p',   name:'สุนัขเพื่อน',   emoji:'🐶', price:120, cat:'animal',   desc:'เพื่อนซื่อสัตย์'},
+  {id:'parrot',  name:'นกแก้วพูดได้',  emoji:'🦜', price:180, cat:'animal',   desc:'ร้องคำศัพท์ได้'},
+  {id:'turtle',  name:'เต่าทะเล',       emoji:'🐢', price:100, cat:'animal',   desc:'เต่าโบราณแห่งท้องทะเล'},
+  {id:'butterfly',name:'ผีเสื้อวิเศษ', emoji:'🦋', price:70,  cat:'animal',   desc:'นำโชคมาให้'},
+  {id:'chair_o', name:'เก้าอี้สนาม',   emoji:'🪑', price:50,  cat:'furniture',desc:'นั่งพักชมวิว'},
+  {id:'umbrella_b',name:'ร่มชายหาด',   emoji:'⛱️', price:120, cat:'furniture',desc:'กันแดดริมทะเล'},
+  {id:'torch',   name:'คบเพลิง',        emoji:'🪔', price:60,  cat:'furniture',desc:'ส่องแสงยามค่ำ'},
+  {id:'telescope',name:'กล้องดาราศาสตร์',emoji:'🔭',price:200, cat:'furniture',desc:'ส่องดูดาวและเรือ'},
+  {id:'boat',    name:'เรือใบ',         emoji:'⛵', price:350, cat:'furniture',desc:'ออกสำรวจท้องทะเล'},
+];
+
+// Island grid 7×5; O=ocean S=sand G=grass
+const ISLAND_COLS = 7;
+const ISLAND_ROWS = 5;
+const TERRAIN_MAP = [
+  'O','O','O','O','O','O','O',
+  'O','S','S','S','S','S','O',
+  'O','S','G','G','G','S','O',
+  'O','S','G','G','G','S','O',
+  'O','S','S','S','S','S','O',
+];
+const TERRAIN_COLOR = { O:'#1a5c9e', S:'#d4a852', G:'#3d9e44' };
 
 const DEFAULT_VOCAB = [
   // ── Animal ──
@@ -663,72 +716,93 @@ function GameplayScreen({ zone, level, vocabulary, onComplete, onExit }) {
   const [combo, setCombo]       = useState(0);
   const [coins, setCoins]       = useState(0);
   const [mistakes, setMistakes] = useState([]);
-  const [selected, setSelected] = useState(null);  // id
-  const [feedback, setFeedback] = useState(null);   // 'correct'|'wrong'
+  const [selected, setSelected] = useState(null);
+  const [feedback, setFeedback] = useState(null);
   const [showCoin, setShowCoin] = useState(false);
   const [busy, setBusy]         = useState(false);
   const [animHeart, setAnimHeart] = useState(false);
   const [exitConfirm, setExitConfirm] = useState(false);
+  // Level 3 typing state
+  const [typedAnswer, setTypedAnswer] = useState('');
+  const [typeFeedback, setTypeFeedback] = useState(null); // null|'correct'|'wrong'
+  const [showHint, setShowHint]   = useState(false);
+  const inputRef = useRef(null);
 
   const q = questions[idx];
 
-  // Level 2: auto-play on new question
   useEffect(() => {
     if (level === 2 && q) setTimeout(() => speak(q.correct.word), 350);
+    if (level === 3) {
+      setTypedAnswer(''); setTypeFeedback(null); setShowHint(false);
+      setTimeout(() => inputRef.current?.focus(), 200);
+    }
   }, [idx, level]);
 
+  // shared "advance to next question or finish"
+  const advance = useCallback((earnedCoins, currentMistakes, currentHearts, failed) => {
+    if (failed) { onComplete({ coins:0, mistakes:currentMistakes, hearts:0, failed:true }); return; }
+    const nextIdx = idx + 1;
+    if (nextIdx < questions.length) {
+      setTimeout(() => {
+        setIdx(nextIdx);
+        setFeedback(null); setSelected(null);
+        setTypeFeedback(null); setTypedAnswer('');
+        setBusy(false);
+      }, 300);
+    } else {
+      playTone('complete');
+      onComplete({ coins: earnedCoins, mistakes: currentMistakes, hearts: currentHearts, failed: false });
+    }
+  }, [idx, questions.length, onComplete]);
+
+  // Level 1 & 2 answer handler
   const answer = useCallback((opt) => {
     if (busy) return;
     setBusy(true);
     setSelected(opt.id);
     const ok = opt.id === q.correct.id;
-
     if (ok) {
-      const newCombo = combo + 1;
-      setCombo(newCombo);
-      const mult = newCombo >= 5 ? 2 : newCombo >= 3 ? 1.5 : 1;
+      const nc = combo + 1; setCombo(nc);
+      const mult = nc >= 5 ? 2 : nc >= 3 ? 1.5 : 1;
       const earned = Math.round(BASE_COINS * mult);
       setCoins(c => c + earned);
-      setFeedback('correct');
-      setShowCoin(true);
-      playTone('correct');
-      speak(q.correct.word);
+      setFeedback('correct'); setShowCoin(true);
+      playTone('correct'); speak(q.correct.word);
       setTimeout(() => setShowCoin(false), 900);
-
-      setTimeout(() => {
-        const nextIdx = idx + 1;
-        if (nextIdx < questions.length) {
-          setIdx(nextIdx); setFeedback(null); setSelected(null); setBusy(false);
-        } else {
-          playTone('complete');
-          onComplete({ coins: coins + earned, mistakes, hearts, failed: false });
-        }
-      }, 900);
+      setTimeout(() => advance(coins + earned, mistakes, hearts, false), 900);
     } else {
-      setFeedback('wrong');
-      setCombo(0);
-      setAnimHeart(true);
-      setTimeout(() => setAnimHeart(false), 500);
-      const newHearts = hearts - 1;
-      setHearts(newHearts);
-      setMistakes(m => [...m, q.correct]);
+      setFeedback('wrong'); setCombo(0);
+      setAnimHeart(true); setTimeout(() => setAnimHeart(false), 500);
+      const nh = hearts - 1; setHearts(nh);
+      const nm = [...mistakes, q.correct]; setMistakes(nm);
       playTone('wrong');
-
-      setTimeout(() => {
-        if (newHearts <= 0) {
-          onComplete({ coins: 0, mistakes: [...mistakes, q.correct], hearts: 0, failed: true });
-          return;
-        }
-        const nextIdx = idx + 1;
-        if (nextIdx < questions.length) {
-          setTimeout(() => { setIdx(nextIdx); setFeedback(null); setSelected(null); setBusy(false); }, 300);
-        } else {
-          playTone('complete');
-          onComplete({ coins, mistakes: [...mistakes, q.correct], hearts: newHearts, failed: false });
-        }
-      }, 1300);
+      setTimeout(() => advance(coins, nm, nh, nh <= 0), 1300);
     }
-  }, [busy, q, combo, hearts, coins, mistakes, idx, questions.length]);
+  }, [busy, q, combo, hearts, coins, mistakes, advance]);
+
+  // Level 3 typing submit
+  const submitTyped = useCallback(() => {
+    if (busy || !typedAnswer.trim()) return;
+    setBusy(true);
+    const ok = typedAnswer.trim().toLowerCase() === q.correct.word.toLowerCase();
+    if (ok) {
+      const nc = combo + 1; setCombo(nc);
+      const mult = nc >= 5 ? 2 : nc >= 3 ? 1.5 : 1;
+      const earned = Math.round(BASE_COINS * mult * 1.5); // bonus for typing
+      setCoins(c => c + earned);
+      setTypeFeedback('correct'); setShowCoin(true);
+      playTone('correct'); speak(q.correct.word);
+      setTimeout(() => setShowCoin(false), 900);
+      setTimeout(() => advance(coins + earned, mistakes, hearts, false), 1000);
+    } else {
+      setTypeFeedback('wrong'); setCombo(0);
+      setAnimHeart(true); setTimeout(() => setAnimHeart(false), 500);
+      const nh = hearts - 1; setHearts(nh);
+      const nm = [...mistakes, q.correct]; setMistakes(nm);
+      playTone('wrong');
+      setTimeout(() => advance(coins, nm, nh, nh <= 0), 1600);
+    }
+  }, [busy, typedAnswer, q, combo, hearts, coins, mistakes, advance]);
 
   const optState = (opt) => {
     if (!selected) return 'default';
@@ -736,6 +810,13 @@ function GameplayScreen({ zone, level, vocabulary, onComplete, onExit }) {
     if (opt.id === selected && feedback === 'wrong') return 'wrong';
     return selected ? 'dimmed' : 'default';
   };
+
+  // letter-box display for typing mode
+  const letterBoxes = q.correct.word.split('').map((c, i) => {
+    const hint = showHint && i === 0;
+    const revealed = typeFeedback === 'correct';
+    return { char: c, hint, revealed };
+  });
 
   return (
     <div style={{ minHeight:'100vh', background:`linear-gradient(180deg,#060d1f 0%,${z.dark}88 100%)`,
@@ -818,29 +899,99 @@ function GameplayScreen({ zone, level, vocabulary, onComplete, onExit }) {
             <>
               <div key={`photo-${idx}`} className="anim-bounce-in"
                 style={{ display:'flex', justifyContent:'center' }}>
-                <VocabImage item={q.correct} size={130} />
+                <VocabImage item={q.correct} size={140} />
               </div>
-              <div style={{ color:'white', fontSize:'1.7rem', fontWeight:900,
-                letterSpacing:'6px', fontFamily:'monospace', marginTop:'4px' }}>
-                {q.masked}
+              {/* Letter boxes */}
+              <div style={{ display:'flex', gap:'5px', justifyContent:'center', flexWrap:'wrap', marginTop:'10px' }}>
+                {letterBoxes.map((lb, i) => (
+                  lb.char === ' '
+                    ? <div key={i} style={{ width:10 }} />
+                    : <div key={i} style={{
+                        width:28, height:32, borderRadius:6,
+                        border:`2px solid ${typeFeedback==='correct'?'#22c55e':typeFeedback==='wrong'?'#ef4444':'#334155'}`,
+                        background: typeFeedback==='correct'?'rgba(22,101,52,.7)':typeFeedback==='wrong'?'rgba(127,29,29,.5)':'rgba(14,26,52,.8)',
+                        display:'flex', alignItems:'center', justifyContent:'center',
+                        color:'white', fontSize:'.85rem', fontWeight:900, fontFamily:'monospace',
+                        transition:'all .2s',
+                      }}>
+                        {lb.revealed || lb.hint ? lb.char.toUpperCase() : ''}
+                      </div>
+                ))}
               </div>
-              <div style={{ color:'#64748b', fontSize:'.78rem' }}>เลือกคำที่สะกดถูกต้อง</div>
+              <div style={{ color:'#475569', fontSize:'.72rem', marginTop:'4px' }}>
+                {q.correct.word.replace(/ /g,'').length} ตัวอักษร
+                {q.correct.word.includes(' ') ? ` · ${q.correct.word.split(' ').length} คำ` : ''}
+              </div>
             </>
           )}
         </div>
 
-        {/* ─ Runestones 2×2 ─ */}
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'10px', width:'100%' }}>
-          {q.options.map(opt => (
-            <RunestoneButton
-              key={opt.id}
-              option={opt}
-              state={optState(opt)}
-              onClick={() => answer(opt)}
-              color={z.color}
-            />
-          ))}
-        </div>
+        {/* ─ Level 1 & 2: Runestones 2×2 ─ */}
+        {level !== 3 && (
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'10px', width:'100%' }}>
+            {q.options.map(opt => (
+              <RunestoneButton key={opt.id} option={opt} state={optState(opt)}
+                onClick={() => answer(opt)} color={z.color} />
+            ))}
+          </div>
+        )}
+
+        {/* ─ Level 3: Typing input ─ */}
+        {level === 3 && (
+          <div style={{ width:'100%', display:'flex', flexDirection:'column', gap:'10px' }}>
+            <div style={{ position:'relative' }}>
+              <input
+                ref={inputRef}
+                value={typedAnswer}
+                onChange={e => !busy && setTypedAnswer(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && submitTyped()}
+                placeholder="พิมพ์คำตอบที่นี่..."
+                disabled={!!typeFeedback}
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck="false"
+                style={{
+                  width:'100%', padding:'14px 16px',
+                  background: typeFeedback==='correct'?'rgba(20,83,45,.9)':typeFeedback==='wrong'?'rgba(90,20,20,.9)':'rgba(14,26,52,.95)',
+                  border:`2px solid ${typeFeedback==='correct'?'#22c55e':typeFeedback==='wrong'?'#ef4444':'#2d4070'}`,
+                  borderRadius:16, color:'white', fontSize:'1.15rem', fontWeight:800,
+                  fontFamily:'inherit', outline:'none', textAlign:'center', letterSpacing:'2px',
+                  transition:'all .2s',
+                }}
+                className={typeFeedback === 'wrong' ? 'anim-shake' : ''}
+              />
+              {!showHint && !typeFeedback && (
+                <button onClick={() => setShowHint(true)}
+                  style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)',
+                    background:'rgba(251,191,36,.15)', border:'1px solid rgba(251,191,36,.4)',
+                    borderRadius:8, padding:'4px 8px', color:'#fbbf24', fontSize:'.72rem',
+                    fontWeight:700, cursor:'pointer', fontFamily:'inherit' }}>
+                  💡 ใบ้
+                </button>
+              )}
+            </div>
+            {typeFeedback === 'wrong' && (
+              <div style={{ textAlign:'center', color:'#86efac', fontWeight:800, fontSize:'.9rem',
+                padding:'8px', background:'rgba(20,83,45,.4)', borderRadius:10,
+                border:'1px solid rgba(34,197,94,.3)' }}>
+                ✓ คำที่ถูกต้อง: <span style={{ letterSpacing:'2px' }}>{q.correct.word.toUpperCase()}</span>
+              </div>
+            )}
+            <button
+              onClick={submitTyped}
+              disabled={!!typeFeedback || !typedAnswer.trim()}
+              style={{
+                width:'100%', padding:'14px', borderRadius:14, border:'none',
+                background: (!typedAnswer.trim() || typeFeedback) ? '#1e2d4a' : z.color,
+                color:'white', fontSize:'1rem', fontWeight:900, cursor:'pointer', fontFamily:'inherit',
+                opacity: (!typedAnswer.trim() || typeFeedback) ? .4 : 1,
+                transition:'all .15s',
+              }}
+            >
+              {typeFeedback === 'correct' ? '✓ ถูกต้อง!' : typeFeedback === 'wrong' ? '✗ ลองใหม่...' : '✓ ส่งคำตอบ'}
+            </button>
+          </div>
+        )}
 
         {/* Coins */}
         <div style={{ color:'#fbbf24', fontWeight:700, fontSize:'.88rem' }}>
@@ -1010,7 +1161,7 @@ function btnS(bg, wide) {
 /* ════════════════════════════════════════════
    HOME SCREEN
 ════════════════════════════════════════════ */
-function HomeScreen({ vocabulary, playerData, progress, onSelectZone, onAdmin }) {
+function HomeScreen({ vocabulary, playerData, progress, onSelectZone, onAdmin, onIsland }) {
   const [modal, setModal] = useState(null);
 
   const zoneUnlocked = i => {
@@ -1064,14 +1215,33 @@ function HomeScreen({ vocabulary, playerData, progress, onSelectZone, onAdmin })
               {totalWords} คำศัพท์ · {unlockedCount} โซนที่ปลดล็อก
             </div>
           </div>
-          <button
-            onClick={onAdmin}
+          <button onClick={onAdmin}
             style={{ background:'rgba(99,102,241,.18)', border:'1.5px solid rgba(99,102,241,.4)',
               borderRadius:'10px', padding:'7px 11px', color:'#818cf8', fontSize:'.78rem',
               fontWeight:800, cursor:'pointer', fontFamily:'inherit' }}>
             ⚙️ Admin
           </button>
         </div>
+      </div>
+
+      {/* ─ My Island banner ─ */}
+      <div onClick={onIsland}
+        style={{ margin:'0 14px 14px', background:'linear-gradient(135deg,#0c3c6e,#14532d)',
+          border:'2px solid rgba(34,197,94,.4)', borderRadius:18, padding:'14px 16px',
+          cursor:'pointer', display:'flex', alignItems:'center', gap:'14px',
+          boxShadow:'0 4px 20px rgba(34,197,94,.15)',
+          transition:'transform .15s',
+        }}
+        onPointerDown={e=>e.currentTarget.style.transform='scale(.97)'}
+        onPointerUp={e=>e.currentTarget.style.transform='scale(1)'}
+        onPointerLeave={e=>e.currentTarget.style.transform='scale(1)'}
+      >
+        <div className="anim-float" style={{ fontSize:'2.4rem', lineHeight:1 }}>🏝️</div>
+        <div style={{ flex:1 }}>
+          <div style={{ color:'white', fontWeight:900, fontSize:'1rem' }}>เกาะส่วนตัวของฉัน</div>
+          <div style={{ color:'#4ade80', fontSize:'.75rem', marginTop:'2px' }}>ตกแต่งเกาะด้วยเหรียญที่ได้จากเกม</div>
+        </div>
+        <div style={{ color:'#22c55e', fontSize:'1.4rem', fontWeight:900 }}>›</div>
       </div>
 
       {/* ─ Map ─ */}
@@ -1452,12 +1622,324 @@ function SplashScreen({ onDone }) {
 }
 
 /* ════════════════════════════════════════════
+   SHOP MODAL
+════════════════════════════════════════════ */
+function ShopModal({ coins, inventory, onBuy, onClose }) {
+  const [cat, setCat] = useState('all');
+  const items = cat === 'all' ? SHOP_ITEMS : SHOP_ITEMS.filter(i => i.cat === cat);
+
+  return (
+    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,.92)', zIndex:999,
+      display:'flex', flexDirection:'column', justifyContent:'flex-end', alignItems:'center' }}
+      onClick={onClose}>
+      <div className="anim-slide-up"
+        style={{ width:'100%', maxWidth:480, background:'#0a1628',
+          borderRadius:'24px 24px 0 0', maxHeight:'85vh', display:'flex', flexDirection:'column',
+          borderTop:'3px solid #f59e0b' }}
+        onClick={e => e.stopPropagation()}>
+
+        {/* Header */}
+        <div style={{ padding:'18px 18px 10px', display:'flex', alignItems:'center', gap:'10px',
+          borderBottom:'1px solid #1e2d4a', flexShrink:0 }}>
+          <div style={{ flex:1 }}>
+            <div style={{ color:'white', fontWeight:900, fontSize:'1.05rem' }}>🛍️ ร้านค้าบนเกาะ</div>
+            <div style={{ color:'#64748b', fontSize:'.75rem' }}>ใช้เหรียญซื้อของตกแต่งเกาะ</div>
+          </div>
+          <div style={{ background:'rgba(251,191,36,.15)', border:'1.5px solid rgba(251,191,36,.4)',
+            borderRadius:20, padding:'5px 13px', color:'#fbbf24', fontWeight:800, fontSize:'.9rem' }}>
+            💰 {coins}
+          </div>
+          <button onClick={onClose} style={{ background:'rgba(255,255,255,.08)', border:'none',
+            color:'#94a3b8', borderRadius:10, padding:'6px 10px', cursor:'pointer', fontSize:'1rem' }}>✕</button>
+        </div>
+
+        {/* Category tabs */}
+        <div style={{ display:'flex', overflowX:'auto', gap:'6px', padding:'10px 14px',
+          flexShrink:0, scrollbarWidth:'none' }}>
+          {SHOP_CATS.map(c => (
+            <button key={c.id} onClick={() => setCat(c.id)} style={{
+              flexShrink:0, padding:'5px 12px', borderRadius:20,
+              border:`1.5px solid ${cat===c.id?'#f59e0b':'#1e2d4a'}`,
+              background: cat===c.id?'rgba(245,158,11,.2)':'transparent',
+              color: cat===c.id?'#fbbf24':'#475569',
+              fontWeight:800, fontSize:'.75rem', cursor:'pointer', fontFamily:'inherit',
+            }}>{c.emoji} {c.label}</button>
+          ))}
+        </div>
+
+        {/* Item grid */}
+        <div style={{ overflowY:'auto', padding:'0 12px 24px',
+          display:'grid', gridTemplateColumns:'1fr 1fr', gap:'10px' }}>
+          {items.map(item => {
+            const owned = inventory[item.id] || 0;
+            const canBuy = coins >= item.price;
+            return (
+              <div key={item.id} style={{ background:'rgba(255,255,255,.04)',
+                border:`1.5px solid ${canBuy?'#2d4070':'#1a2438'}`, borderRadius:16, padding:'14px 10px',
+                display:'flex', flexDirection:'column', alignItems:'center', gap:'6px', textAlign:'center' }}>
+                <div style={{ fontSize:'2.5rem', lineHeight:1 }}>{item.emoji}</div>
+                <div style={{ color:'white', fontWeight:800, fontSize:'.85rem', lineHeight:1.2 }}>{item.name}</div>
+                <div style={{ color:'#475569', fontSize:'.7rem' }}>{item.desc}</div>
+                {owned > 0 && (
+                  <div style={{ color:'#22c55e', fontSize:'.72rem', fontWeight:700 }}>มีแล้ว {owned} ชิ้น</div>
+                )}
+                <button onClick={() => canBuy && onBuy(item)}
+                  disabled={!canBuy}
+                  style={{ width:'100%', marginTop:'4px', padding:'7px', borderRadius:10, border:'none',
+                    background: canBuy?'#f59e0b':'#1e2d4a',
+                    color: canBuy?'#000':'#334155',
+                    fontWeight:900, fontSize:'.82rem', cursor: canBuy?'pointer':'default', fontFamily:'inherit',
+                    opacity: canBuy?1:.5 }}>
+                  💰 {item.price}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════
+   ISLAND SCREEN
+════════════════════════════════════════════ */
+function IslandScreen({ playerData, setPlayerData, inventory, setInventory, onBack }) {
+  const [grid, setGrid]           = useLS('mwi_island_grid', {});
+  const [islandName, setIslandName] = useLS('mwi_island_name', 'เกาะของฉัน');
+  const [selected, setSelected]   = useState(null); // shop item to place
+  const [shopOpen, setShopOpen]   = useState(false);
+  const [editName, setEditName]   = useState(false);
+  const [nameInput, setNameInput] = useState(islandName);
+  const [removeMode, setRemoveMode] = useState(false);
+  const [toast, setToast]         = useState('');
+
+  const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 1800); };
+
+  const coins = playerData.coins || 0;
+
+  const buyItem = (item) => {
+    if (coins < item.price) return;
+    setPlayerData(p => ({ ...p, coins: (p.coins||0) - item.price }));
+    setInventory(inv => ({ ...inv, [item.id]: (inv[item.id]||0) + 1 }));
+    showToast(`ซื้อ ${item.name} แล้ว! 🎉`);
+  };
+
+  const selectItem = (item) => {
+    if ((inventory[item.id]||0) <= 0) return;
+    setSelected(item);
+    setRemoveMode(false);
+    showToast(`เลือก ${item.emoji} แตะช่องบนเกาะเพื่อวาง`);
+  };
+
+  const handleCellTap = (cellIdx) => {
+    const terrain = TERRAIN_MAP[cellIdx];
+    const key = String(cellIdx);
+
+    if (removeMode) {
+      if (grid[key]) {
+        const it = SHOP_ITEMS.find(s => s.id === grid[key].id);
+        if (it) setInventory(inv => ({ ...inv, [it.id]: (inv[it.id]||0)+1 }));
+        setGrid(g => { const n={...g}; delete n[key]; return n; });
+        showToast('นำออกแล้ว คืนไปคลัง ✓');
+      }
+      return;
+    }
+
+    if (!selected) return;
+    if (terrain === 'O') { showToast('ไม่สามารถวางบนทะเลได้ 🌊'); return; }
+
+    // return existing item to inventory
+    if (grid[key]) {
+      const old = SHOP_ITEMS.find(s => s.id === grid[key].id);
+      if (old) setInventory(inv => ({ ...inv, [old.id]: (inv[old.id]||0)+1 }));
+    }
+
+    setGrid(g => ({ ...g, [key]: { id: selected.id, emoji: selected.emoji, name: selected.name } }));
+    setInventory(inv => {
+      const next = { ...inv, [selected.id]: (inv[selected.id]||0) - 1 };
+      if (next[selected.id] <= 0) setSelected(null);
+      return next;
+    });
+  };
+
+  const ownedItems = SHOP_ITEMS.filter(i => (inventory[i.id]||0) > 0);
+  const totalItems = Object.keys(grid).length;
+
+  return (
+    <div style={{ minHeight:'100vh', background:'linear-gradient(180deg,#060d1f,#0c2040)',
+      display:'flex', flexDirection:'column', paddingBottom:24 }}>
+
+      {/* Header */}
+      <div style={{ padding:'16px 14px 10px', display:'flex', alignItems:'center', gap:'10px',
+        background:'rgba(6,13,31,.95)', borderBottom:'1px solid #0e1c36' }}>
+        <button onClick={onBack} style={{ background:'rgba(255,255,255,.08)', border:'none', color:'#94a3b8',
+          borderRadius:10, padding:'7px 12px', cursor:'pointer', fontFamily:'inherit',
+          fontWeight:700, fontSize:'.82rem' }}>← กลับ</button>
+        <div style={{ flex:1 }}>
+          {editName ? (
+            <div style={{ display:'flex', gap:'6px' }}>
+              <input value={nameInput} onChange={e=>setNameInput(e.target.value)}
+                style={{ flex:1, background:'#0f1f3d', border:'1.5px solid #6366f1',
+                  borderRadius:8, padding:'4px 8px', color:'white', fontSize:'.9rem', fontFamily:'inherit', outline:'none' }} />
+              <button onClick={() => { setIslandName(nameInput); setEditName(false); }}
+                style={{ background:'#6366f1', border:'none', borderRadius:8, padding:'4px 10px',
+                  color:'white', cursor:'pointer', fontWeight:700, fontFamily:'inherit', fontSize:'.8rem' }}>✓</button>
+            </div>
+          ) : (
+            <div style={{ display:'flex', alignItems:'center', gap:'6px' }}>
+              <span style={{ color:'white', fontWeight:900, fontSize:'1rem' }}>{islandName}</span>
+              <button onClick={() => { setEditName(true); setNameInput(islandName); }}
+                style={{ background:'none', border:'none', color:'#475569', cursor:'pointer', fontSize:'.85rem' }}>✏️</button>
+            </div>
+          )}
+          <div style={{ color:'#3d5070', fontSize:'.7rem' }}>{totalItems} ชิ้นบนเกาะ</div>
+        </div>
+        <div style={{ background:'rgba(251,191,36,.12)', border:'1.5px solid rgba(251,191,36,.3)',
+          borderRadius:18, padding:'4px 11px', color:'#fbbf24', fontWeight:800, fontSize:'.85rem' }}>
+          💰 {coins}
+        </div>
+      </div>
+
+      {/* Island Grid */}
+      <div style={{ padding:'14px 10px 6px', flex:1 }}>
+        <div style={{
+          display:'grid',
+          gridTemplateColumns:`repeat(${ISLAND_COLS}, 1fr)`,
+          gap:4,
+          background:'#0c2244',
+          borderRadius:16,
+          padding:6,
+          border:'2px solid #1a3560',
+          boxShadow:'0 0 30px rgba(30,111,166,.4)',
+        }}>
+          {TERRAIN_MAP.map((terrain, i) => {
+            const key = String(i);
+            const placed = grid[key];
+            const isTarget = selected && terrain !== 'O';
+            const isRemovable = removeMode && placed;
+            return (
+              <div key={i}
+                onClick={() => terrain !== 'O' || placed ? handleCellTap(i) : undefined}
+                style={{
+                  aspectRatio:'1', borderRadius:8,
+                  background: TERRAIN_COLOR[terrain],
+                  display:'flex', alignItems:'center', justifyContent:'center',
+                  fontSize:'1.3rem', lineHeight:1,
+                  border: isTarget ? '2px dashed rgba(255,255,255,.5)'
+                    : isRemovable ? '2px solid #ef4444'
+                    : '1px solid rgba(0,0,0,.15)',
+                  cursor: (isTarget || isRemovable || placed) ? 'pointer' : 'default',
+                  position:'relative', overflow:'hidden',
+                  boxShadow: placed ? 'inset 0 -2px 4px rgba(0,0,0,.3)' : 'none',
+                  transition:'border .15s',
+                }}>
+                {placed && <span style={{ filter:'drop-shadow(0 2px 4px rgba(0,0,0,.5))' }}>{placed.emoji}</span>}
+                {isTarget && !placed && <span style={{ opacity:.25, fontSize:'1rem' }}>+</span>}
+                {isRemovable && (
+                  <div style={{ position:'absolute', inset:0, background:'rgba(239,68,68,.2)',
+                    display:'flex', alignItems:'center', justifyContent:'center', fontSize:'.7rem' }}>🗑️</div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Status bar under grid */}
+        <div style={{ display:'flex', gap:'8px', marginTop:'8px', justifyContent:'center', flexWrap:'wrap' }}>
+          {selected && (
+            <div style={{ background:'rgba(34,197,94,.15)', border:'1px solid rgba(34,197,94,.4)',
+              borderRadius:20, padding:'4px 12px', color:'#4ade80', fontSize:'.78rem', fontWeight:700 }}>
+              🖐️ กำลังวาง: {selected.emoji} {selected.name}
+              <button onClick={() => setSelected(null)}
+                style={{ marginLeft:6, background:'none', border:'none', color:'#64748b', cursor:'pointer', fontSize:'.75rem' }}>✕</button>
+            </div>
+          )}
+          {removeMode && (
+            <div style={{ background:'rgba(239,68,68,.15)', border:'1px solid rgba(239,68,68,.4)',
+              borderRadius:20, padding:'4px 12px', color:'#f87171', fontSize:'.78rem', fontWeight:700 }}>
+              🗑️ โหมดลบ — แตะสิ่งของเพื่อเอาออก
+              <button onClick={() => setRemoveMode(false)}
+                style={{ marginLeft:6, background:'none', border:'none', color:'#64748b', cursor:'pointer', fontSize:'.75rem' }}>✕</button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Inventory bar */}
+      <div style={{ padding:'0 10px' }}>
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between',
+          marginBottom:6, padding:'0 4px' }}>
+          <div style={{ color:'#3d5070', fontSize:'.72rem', fontWeight:700 }}>
+            🎒 คลังของฉัน ({ownedItems.length} ประเภท)
+          </div>
+          <div style={{ display:'flex', gap:'6px' }}>
+            <button onClick={() => { setRemoveMode(r=>!r); setSelected(null); }}
+              style={{ background: removeMode?'rgba(239,68,68,.2)':'rgba(255,255,255,.06)',
+                border:`1px solid ${removeMode?'#ef444466':'#1e2d4a'}`,
+                borderRadius:8, padding:'4px 10px', color: removeMode?'#f87171':'#475569',
+                cursor:'pointer', fontWeight:700, fontSize:'.72rem', fontFamily:'inherit' }}>
+              🗑️ ลบ
+            </button>
+            <button onClick={() => setShopOpen(true)}
+              style={{ background:'rgba(245,158,11,.18)', border:'1.5px solid rgba(245,158,11,.45)',
+                borderRadius:8, padding:'4px 12px', color:'#fbbf24',
+                cursor:'pointer', fontWeight:800, fontSize:'.78rem', fontFamily:'inherit' }}>
+              🛍️ ร้านค้า
+            </button>
+          </div>
+        </div>
+
+        {ownedItems.length === 0 ? (
+          <div style={{ textAlign:'center', color:'#1e2d4a', padding:'14px', fontSize:'.8rem' }}>
+            ยังไม่มีของ — กด 🛍️ ร้านค้า เพื่อซื้อของตกแต่งด้วยเหรียญ
+          </div>
+        ) : (
+          <div style={{ display:'flex', gap:'8px', overflowX:'auto', paddingBottom:6, scrollbarWidth:'none' }}>
+            {ownedItems.map(item => (
+              <div key={item.id}
+                onClick={() => selectItem(item)}
+                style={{
+                  flexShrink:0, width:64, textAlign:'center',
+                  background: selected?.id===item.id ? 'rgba(34,197,94,.2)' : 'rgba(255,255,255,.05)',
+                  border:`2px solid ${selected?.id===item.id?'#22c55e':'#1e2d4a'}`,
+                  borderRadius:12, padding:'8px 4px', cursor:'pointer',
+                  transition:'all .15s',
+                }}>
+                <div style={{ fontSize:'1.8rem', lineHeight:1 }}>{item.emoji}</div>
+                <div style={{ color:'#64748b', fontSize:'.6rem', marginTop:2 }}>{item.name}</div>
+                <div style={{ color:'#22c55e', fontSize:'.68rem', fontWeight:800 }}>x{inventory[item.id]||0}</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Toast */}
+      {toast && (
+        <div className="anim-fade-up" style={{ position:'fixed', bottom:90, left:'50%', transform:'translateX(-50%)',
+          background:'rgba(15,31,61,.96)', border:'1px solid #2d4070', borderRadius:20,
+          padding:'8px 18px', color:'white', fontWeight:700, fontSize:'.85rem',
+          boxShadow:'0 4px 20px rgba(0,0,0,.5)', zIndex:500, whiteSpace:'nowrap' }}>
+          {toast}
+        </div>
+      )}
+
+      {shopOpen && (
+        <ShopModal coins={coins} inventory={inventory} onBuy={buyItem} onClose={() => setShopOpen(false)} />
+      )}
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════
    MAIN APP
 ════════════════════════════════════════════ */
 function App() {
   const [vocabulary, setVocabulary] = useLS('mwi_vocab',    DEFAULT_VOCAB);
   const [playerData, setPlayerData] = useLS('mwi_player',   { coins: 0 });
   const [progress,   setProgress]   = useLS('mwi_progress', {});
+  const [inventory,  setInventory]  = useLS('mwi_inventory', {});
 
   const [screen,      setScreen]      = useState('splash');
   const [activeZone,  setActiveZone]  = useState(null);
@@ -1504,6 +1986,7 @@ function App() {
           progress={progress}
           onSelectZone={handleSelectZone}
           onAdmin={() => setScreen('admin')}
+          onIsland={() => setScreen('island')}
         />
       )}
 
@@ -1533,6 +2016,16 @@ function App() {
         <AdminScreen
           vocabulary={vocabulary}
           onUpdate={setVocabulary}
+          onBack={() => setScreen('home')}
+        />
+      )}
+
+      {screen === 'island' && (
+        <IslandScreen
+          playerData={playerData}
+          setPlayerData={setPlayerData}
+          inventory={inventory}
+          setInventory={setInventory}
           onBack={() => setScreen('home')}
         />
       )}
