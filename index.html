@@ -196,83 +196,83 @@ const LEVEL_INFO = [
 ];
 
 const DEFAULT_VOCAB = [
-  // Animal
-  {id:1,zone:'animal',  word:'Cat',      thai:'แมว',               emoji:'🐱'},
-  {id:2,zone:'animal',  word:'Dog',      thai:'สุนัข',             emoji:'🐶'},
-  {id:3,zone:'animal',  word:'Bird',     thai:'นก',                emoji:'🐦'},
-  {id:4,zone:'animal',  word:'Monkey',   thai:'ลิง',               emoji:'🐵'},
-  {id:5,zone:'animal',  word:'Elephant', thai:'ช้าง',              emoji:'🐘'},
-  {id:6,zone:'animal',  word:'Tiger',    thai:'เสือ',              emoji:'🐯'},
-  {id:7,zone:'animal',  word:'Lion',     thai:'สิงโต',             emoji:'🦁'},
-  {id:8,zone:'animal',  word:'Frog',     thai:'กบ',                emoji:'🐸'},
-  {id:9,zone:'animal',  word:'Fox',      thai:'สุนัขจิ้งจอก',     emoji:'🦊'},
-  {id:10,zone:'animal', word:'Rabbit',   thai:'กระต่าย',           emoji:'🐰'},
-  // Food
-  {id:11,zone:'food',   word:'Apple',    thai:'แอปเปิล',           emoji:'🍎'},
-  {id:12,zone:'food',   word:'Bread',    thai:'ขนมปัง',            emoji:'🍞'},
-  {id:13,zone:'food',   word:'Milk',     thai:'นม',                emoji:'🥛'},
-  {id:14,zone:'food',   word:'Water',    thai:'น้ำ',               emoji:'💧'},
-  {id:15,zone:'food',   word:'Rice',     thai:'ข้าว',              emoji:'🍚'},
-  {id:16,zone:'food',   word:'Banana',   thai:'กล้วย',             emoji:'🍌'},
-  {id:17,zone:'food',   word:'Egg',      thai:'ไข่',               emoji:'🥚'},
-  {id:18,zone:'food',   word:'Cheese',   thai:'ชีส',               emoji:'🧀'},
-  {id:19,zone:'food',   word:'Orange',   thai:'ส้ม',               emoji:'🍊'},
-  {id:20,zone:'food',   word:'Fish',     thai:'ปลา',               emoji:'🐟'},
-  // Cabin
-  {id:21,zone:'cabin',  word:'Bed',      thai:'เตียงนอน',          emoji:'🛏️'},
-  {id:22,zone:'cabin',  word:'Chair',    thai:'เก้าอี้',           emoji:'🪑'},
-  {id:23,zone:'cabin',  word:'Table',    thai:'โต๊ะ',              emoji:'🏓'},
-  {id:24,zone:'cabin',  word:'Cup',      thai:'ถ้วย',              emoji:'☕'},
-  {id:25,zone:'cabin',  word:'Door',     thai:'ประตู',             emoji:'🚪'},
-  {id:26,zone:'cabin',  word:'Book',     thai:'หนังสือ',           emoji:'📚'},
-  {id:27,zone:'cabin',  word:'Lamp',     thai:'โคมไฟ',             emoji:'💡'},
-  {id:28,zone:'cabin',  word:'Window',   thai:'หน้าต่าง',          emoji:'🪟'},
-  {id:29,zone:'cabin',  word:'Key',      thai:'กุญแจ',             emoji:'🗝️'},
-  {id:30,zone:'cabin',  word:'Clock',    thai:'นาฬิกา',            emoji:'⏰'},
-  // Action
-  {id:31,zone:'action', word:'Run',      thai:'วิ่ง',              emoji:'🏃'},
-  {id:32,zone:'action', word:'Walk',     thai:'เดิน',              emoji:'🚶'},
-  {id:33,zone:'action', word:'Eat',      thai:'กิน',               emoji:'🍽️'},
-  {id:34,zone:'action', word:'Sleep',    thai:'นอนหลับ',           emoji:'😴'},
-  {id:35,zone:'action', word:'Jump',     thai:'กระโดด',            emoji:'🦘'},
-  {id:36,zone:'action', word:'Swim',     thai:'ว่ายน้ำ',           emoji:'🏊'},
-  {id:37,zone:'action', word:'Fly',      thai:'บิน',               emoji:'✈️'},
-  {id:38,zone:'action', word:'Read',     thai:'อ่าน',              emoji:'📖'},
-  {id:39,zone:'action', word:'Sing',     thai:'ร้องเพลง',          emoji:'🎤'},
-  {id:40,zone:'action', word:'Dance',    thai:'เต้นรำ',            emoji:'💃'},
-  // Direction
-  {id:41,zone:'direction',word:'Left',   thai:'ซ้าย',              emoji:'⬅️'},
-  {id:42,zone:'direction',word:'Right',  thai:'ขวา',               emoji:'➡️'},
-  {id:43,zone:'direction',word:'Up',     thai:'ขึ้น/บน',           emoji:'⬆️'},
-  {id:44,zone:'direction',word:'Down',   thai:'ลง/ล่าง',           emoji:'⬇️'},
-  {id:45,zone:'direction',word:'Stop',   thai:'หยุด',              emoji:'🛑'},
-  {id:46,zone:'direction',word:'Go',     thai:'ไป/เดินหน้า',       emoji:'🟢'},
-  {id:47,zone:'direction',word:'Turn',   thai:'เลี้ยว',            emoji:'↩️'},
-  {id:48,zone:'direction',word:'Fast',   thai:'เร็ว',              emoji:'⚡'},
-  {id:49,zone:'direction',word:'Slow',   thai:'ช้า',               emoji:'🐌'},
-  {id:50,zone:'direction',word:'Here',        thai:'ที่นี่',                    emoji:'📍'},
-  // Rooms & Areas (Mystery Mansion)
-  {id:51,zone:'rooms',    word:'Bedroom',      thai:'ห้องนอน',                   emoji:'🛏️'},
-  {id:52,zone:'rooms',    word:'Bathroom',     thai:'ห้องน้ำ',                   emoji:'🛁'},
-  {id:53,zone:'rooms',    word:'Kitchen',      thai:'ห้องครัว',                  emoji:'🍳'},
-  {id:54,zone:'rooms',    word:'Garage',       thai:'โรงรถ',                     emoji:'🚗'},
-  {id:55,zone:'rooms',    word:'Yard',         thai:'ลานบ้าน / สนามหญ้า',        emoji:'🌳'},
-  {id:56,zone:'rooms',    word:'Stairs',       thai:'บันได',                     emoji:'🪜'},
-  {id:57,zone:'rooms',    word:'Living Room',  thai:'ห้องนั่งเล่น',              emoji:'🏡'},
-  {id:58,zone:'rooms',    word:'Dining Room',  thai:'ห้องรับประทานอาหาร',        emoji:'🥂'},
-  {id:59,zone:'rooms',    word:'Upstairs',     thai:'ชั้นบน',                    emoji:'🔝'},
-  {id:60,zone:'rooms',    word:'Downstairs',   thai:'ชั้นล่าง',                  emoji:'🔽'},
-  // Furniture & Household (Treasure Chamber)
-  {id:61,zone:'furniture',word:'Wardrobe',     thai:'ตู้เสื้อผ้า',               emoji:'👗'},
-  {id:62,zone:'furniture',word:'Blanket',      thai:'ผ้าห่ม',                    emoji:'🧣'},
-  {id:63,zone:'furniture',word:'Cushion',      thai:'หมอนอิง',                   emoji:'🪑'},
-  {id:64,zone:'furniture',word:'Suitcase',     thai:'กระเป๋าเดินทาง',            emoji:'🧳'},
-  {id:65,zone:'furniture',word:'Couch',        thai:'โซฟา',                      emoji:'🛋️'},
-  {id:66,zone:'furniture',word:'Stove',        thai:'เตาทำอาหาร',               emoji:'🔥'},
-  {id:67,zone:'furniture',word:'Oven',         thai:'เตาอบ',                     emoji:'♨️'},
-  {id:68,zone:'furniture',word:'Refrigerator', thai:'ตู้เย็น',                   emoji:'🧊'},
-  {id:69,zone:'furniture',word:'Mattress',     thai:'ที่นอน / ฟูก',              emoji:'💤'},
-  {id:70,zone:'furniture',word:'Carpet',       thai:'พรม',                       emoji:'🟫'},
+  // ── Animal ──
+  {id:1, zone:'animal',  word:'Cat',         thai:'แมว',                  emoji:'🐱', img:'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop&q=80'},
+  {id:2, zone:'animal',  word:'Dog',         thai:'สุนัข',                emoji:'🐶', img:'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400&h=400&fit=crop&q=80'},
+  {id:3, zone:'animal',  word:'Bird',        thai:'นก',                   emoji:'🐦', img:'https://images.unsplash.com/photo-1444464666168-49d633b86797?w=400&h=400&fit=crop&q=80'},
+  {id:4, zone:'animal',  word:'Monkey',      thai:'ลิง',                  emoji:'🐵', img:'https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?w=400&h=400&fit=crop&q=80'},
+  {id:5, zone:'animal',  word:'Elephant',    thai:'ช้าง',                 emoji:'🐘', img:'https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?w=400&h=400&fit=crop&q=80'},
+  {id:6, zone:'animal',  word:'Tiger',       thai:'เสือ',                 emoji:'🐯', img:'https://images.unsplash.com/photo-1561731216-c3a4d99437d5?w=400&h=400&fit=crop&q=80'},
+  {id:7, zone:'animal',  word:'Lion',        thai:'สิงโต',                emoji:'🦁', img:'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=400&h=400&fit=crop&q=80'},
+  {id:8, zone:'animal',  word:'Frog',        thai:'กบ',                   emoji:'🐸', img:'https://images.unsplash.com/photo-1534119428213-bd2626145164?w=400&h=400&fit=crop&q=80'},
+  {id:9, zone:'animal',  word:'Fox',         thai:'สุนัขจิ้งจอก',        emoji:'🦊', img:'https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=400&h=400&fit=crop&q=80'},
+  {id:10,zone:'animal',  word:'Rabbit',      thai:'กระต่าย',              emoji:'🐰', img:'https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=400&h=400&fit=crop&q=80'},
+  // ── Food ──
+  {id:11,zone:'food',    word:'Apple',       thai:'แอปเปิล',              emoji:'🍎', img:'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=400&h=400&fit=crop&q=80'},
+  {id:12,zone:'food',    word:'Bread',       thai:'ขนมปัง',               emoji:'🍞', img:'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&h=400&fit=crop&q=80'},
+  {id:13,zone:'food',    word:'Milk',        thai:'นม',                   emoji:'🥛', img:'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400&h=400&fit=crop&q=80'},
+  {id:14,zone:'food',    word:'Water',       thai:'น้ำ',                  emoji:'💧', img:'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=400&h=400&fit=crop&q=80'},
+  {id:15,zone:'food',    word:'Rice',        thai:'ข้าว',                 emoji:'🍚', img:'https://images.unsplash.com/photo-1536304993881-ff86e0c9e14b?w=400&h=400&fit=crop&q=80'},
+  {id:16,zone:'food',    word:'Banana',      thai:'กล้วย',                emoji:'🍌', img:'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=400&h=400&fit=crop&q=80'},
+  {id:17,zone:'food',    word:'Egg',         thai:'ไข่',                  emoji:'🥚', img:'https://images.unsplash.com/photo-1518569656558-1f25e69d93d7?w=400&h=400&fit=crop&q=80'},
+  {id:18,zone:'food',    word:'Cheese',      thai:'ชีส',                  emoji:'🧀', img:'https://images.unsplash.com/photo-1486297678162-eb2a19b0a2d0?w=400&h=400&fit=crop&q=80'},
+  {id:19,zone:'food',    word:'Orange',      thai:'ส้ม',                  emoji:'🍊', img:'https://images.unsplash.com/photo-1547514701-42782101795e?w=400&h=400&fit=crop&q=80'},
+  {id:20,zone:'food',    word:'Fish',        thai:'ปลา',                  emoji:'🐟', img:'https://images.unsplash.com/photo-1534043464124-3be32fe000c9?w=400&h=400&fit=crop&q=80'},
+  // ── Cabin ──
+  {id:21,zone:'cabin',   word:'Bed',         thai:'เตียงนอน',             emoji:'🛏️', img:'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=400&h=400&fit=crop&q=80'},
+  {id:22,zone:'cabin',   word:'Chair',       thai:'เก้าอี้',              emoji:'🪑', img:'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=400&h=400&fit=crop&q=80'},
+  {id:23,zone:'cabin',   word:'Table',       thai:'โต๊ะ',                 emoji:'🏓', img:'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=400&fit=crop&q=80'},
+  {id:24,zone:'cabin',   word:'Cup',         thai:'ถ้วย',                 emoji:'☕', img:'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=400&h=400&fit=crop&q=80'},
+  {id:25,zone:'cabin',   word:'Door',        thai:'ประตู',                emoji:'🚪', img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop&q=80'},
+  {id:26,zone:'cabin',   word:'Book',        thai:'หนังสือ',              emoji:'📚', img:'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=400&fit=crop&q=80'},
+  {id:27,zone:'cabin',   word:'Lamp',        thai:'โคมไฟ',                emoji:'💡', img:'https://images.unsplash.com/photo-1524484485831-a92ffc0de03f?w=400&h=400&fit=crop&q=80'},
+  {id:28,zone:'cabin',   word:'Window',      thai:'หน้าต่าง',             emoji:'🪟', img:'https://images.unsplash.com/photo-1493552152660-f915ab47ae9d?w=400&h=400&fit=crop&q=80'},
+  {id:29,zone:'cabin',   word:'Key',         thai:'กุญแจ',                emoji:'🗝️', img:'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&h=400&fit=crop&q=80'},
+  {id:30,zone:'cabin',   word:'Clock',       thai:'นาฬิกา',               emoji:'⏰', img:'https://images.unsplash.com/photo-1501139083538-0139583c060f?w=400&h=400&fit=crop&q=80'},
+  // ── Action ──
+  {id:31,zone:'action',  word:'Run',         thai:'วิ่ง',                 emoji:'🏃', img:'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=400&h=400&fit=crop&q=80'},
+  {id:32,zone:'action',  word:'Walk',        thai:'เดิน',                 emoji:'🚶', img:'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=400&h=400&fit=crop&q=80'},
+  {id:33,zone:'action',  word:'Eat',         thai:'กิน',                  emoji:'🍽️', img:'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop&q=80'},
+  {id:34,zone:'action',  word:'Sleep',       thai:'นอนหลับ',              emoji:'😴', img:'https://images.unsplash.com/photo-1455642305367-68834a9d8890?w=400&h=400&fit=crop&q=80'},
+  {id:35,zone:'action',  word:'Jump',        thai:'กระโดด',               emoji:'🦘', img:'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop&q=80'},
+  {id:36,zone:'action',  word:'Swim',        thai:'ว่ายน้ำ',              emoji:'🏊', img:'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=400&h=400&fit=crop&q=80'},
+  {id:37,zone:'action',  word:'Fly',         thai:'บิน',                  emoji:'✈️', img:'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400&h=400&fit=crop&q=80'},
+  {id:38,zone:'action',  word:'Read',        thai:'อ่าน',                 emoji:'📖', img:'https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?w=400&h=400&fit=crop&q=80'},
+  {id:39,zone:'action',  word:'Sing',        thai:'ร้องเพลง',             emoji:'🎤', img:'https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400&h=400&fit=crop&q=80'},
+  {id:40,zone:'action',  word:'Dance',       thai:'เต้นรำ',               emoji:'💃', img:'https://images.unsplash.com/photo-1545959570-a94084071b5d?w=400&h=400&fit=crop&q=80'},
+  // ── Direction ──
+  {id:41,zone:'direction',word:'Left',       thai:'ซ้าย',                 emoji:'⬅️', img:'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop&q=80'},
+  {id:42,zone:'direction',word:'Right',      thai:'ขวา',                  emoji:'➡️', img:'https://images.unsplash.com/photo-1602491453631-e2a5ad90a131?w=400&h=400&fit=crop&q=80'},
+  {id:43,zone:'direction',word:'Up',         thai:'ขึ้น/บน',              emoji:'⬆️', img:'https://images.unsplash.com/photo-1503220317375-aaad61436b1b?w=400&h=400&fit=crop&q=80'},
+  {id:44,zone:'direction',word:'Down',       thai:'ลง/ล่าง',              emoji:'⬇️', img:'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&h=400&fit=crop&q=80'},
+  {id:45,zone:'direction',word:'Stop',       thai:'หยุด',                 emoji:'🛑', img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop&q=80'},
+  {id:46,zone:'direction',word:'Go',         thai:'ไป/เดินหน้า',          emoji:'🟢', img:'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=400&fit=crop&q=80'},
+  {id:47,zone:'direction',word:'Turn',       thai:'เลี้ยว',               emoji:'↩️', img:'https://images.unsplash.com/photo-1464219789935-c2d9d9aba644?w=400&h=400&fit=crop&q=80'},
+  {id:48,zone:'direction',word:'Fast',       thai:'เร็ว',                 emoji:'⚡', img:'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=400&h=400&fit=crop&q=80'},
+  {id:49,zone:'direction',word:'Slow',       thai:'ช้า',                  emoji:'🐌', img:'https://images.unsplash.com/photo-1597534458220-9fb4969f2df5?w=400&h=400&fit=crop&q=80'},
+  {id:50,zone:'direction',word:'Here',       thai:'ที่นี่',               emoji:'📍', img:'https://images.unsplash.com/photo-1524661135-423995f22d0b?w=400&h=400&fit=crop&q=80'},
+  // ── Rooms & Areas ──
+  {id:51,zone:'rooms',    word:'Bedroom',    thai:'ห้องนอน',              emoji:'🛏️', img:'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&h=400&fit=crop&q=80'},
+  {id:52,zone:'rooms',    word:'Bathroom',   thai:'ห้องน้ำ',              emoji:'🛁', img:'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=400&h=400&fit=crop&q=80'},
+  {id:53,zone:'rooms',    word:'Kitchen',    thai:'ห้องครัว',             emoji:'🍳', img:'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop&q=80'},
+  {id:54,zone:'rooms',    word:'Garage',     thai:'โรงรถ',                emoji:'🚗', img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop&q=80'},
+  {id:55,zone:'rooms',    word:'Yard',       thai:'ลานบ้าน / สนามหญ้า',  emoji:'🌳', img:'https://images.unsplash.com/photo-1558904541-efa843a96f01?w=400&h=400&fit=crop&q=80'},
+  {id:56,zone:'rooms',    word:'Stairs',     thai:'บันได',                emoji:'🪜', img:'https://images.unsplash.com/photo-1567016376408-0226e4d0c1ea?w=400&h=400&fit=crop&q=80'},
+  {id:57,zone:'rooms',    word:'Living Room',thai:'ห้องนั่งเล่น',         emoji:'🏡', img:'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=400&fit=crop&q=80'},
+  {id:58,zone:'rooms',    word:'Dining Room',thai:'ห้องรับประทานอาหาร',   emoji:'🥂', img:'https://images.unsplash.com/photo-1617806118233-18e1de247200?w=400&h=400&fit=crop&q=80'},
+  {id:59,zone:'rooms',    word:'Upstairs',   thai:'ชั้นบน',               emoji:'🔝', img:'https://images.unsplash.com/photo-1567016376408-0226e4d0c1ea?w=400&h=400&fit=crop&q=80'},
+  {id:60,zone:'rooms',    word:'Downstairs', thai:'ชั้นล่าง',             emoji:'🔽', img:'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&h=400&fit=crop&q=80'},
+  // ── Furniture & Household ──
+  {id:61,zone:'furniture',word:'Wardrobe',     thai:'ตู้เสื้อผ้า',        emoji:'👗', img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop&q=80'},
+  {id:62,zone:'furniture',word:'Blanket',      thai:'ผ้าห่ม',             emoji:'🧣', img:'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&h=400&fit=crop&q=80'},
+  {id:63,zone:'furniture',word:'Cushion',      thai:'หมอนอิง',            emoji:'🪑', img:'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=400&fit=crop&q=80'},
+  {id:64,zone:'furniture',word:'Suitcase',     thai:'กระเป๋าเดินทาง',    emoji:'🧳', img:'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop&q=80'},
+  {id:65,zone:'furniture',word:'Couch',        thai:'โซฟา',               emoji:'🛋️', img:'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=400&fit=crop&q=80'},
+  {id:66,zone:'furniture',word:'Stove',        thai:'เตาทำอาหาร',        emoji:'🔥', img:'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop&q=80'},
+  {id:67,zone:'furniture',word:'Oven',         thai:'เตาอบ',              emoji:'♨️', img:'https://images.unsplash.com/photo-1585515320310-259814833e62?w=400&h=400&fit=crop&q=80'},
+  {id:68,zone:'furniture',word:'Refrigerator', thai:'ตู้เย็น',            emoji:'🧊', img:'https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=400&h=400&fit=crop&q=80'},
+  {id:69,zone:'furniture',word:'Mattress',     thai:'ที่นอน / ฟูก',      emoji:'💤', img:'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=400&h=400&fit=crop&q=80'},
+  {id:70,zone:'furniture',word:'Carpet',       thai:'พรม',                emoji:'🟫', img:'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&h=400&fit=crop&q=80'},
 ];
 
 /* ════════════════════════════════════════════
@@ -405,6 +405,46 @@ function useLS(key, def) {
     });
   }, [key]);
   return [val, set];
+}
+
+/* ── Real photo component ── */
+function VocabImage({ item, size = 180 }) {
+  const [failed, setFailed] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
+  const src = item.img && item.img.startsWith('http')
+    ? item.img
+    : `https://source.unsplash.com/featured/${size}x${size}/?${encodeURIComponent(item.word)}`;
+
+  if (failed || !item.img) {
+    return (
+      <div style={{ width:size, height:size, display:'flex', alignItems:'center',
+        justifyContent:'center', background:'rgba(255,255,255,.06)', borderRadius:18 }}>
+        <EmojiImg emoji={item.emoji} size={size * 0.65} />
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ position:'relative', width:size, height:size, borderRadius:18, overflow:'hidden',
+      boxShadow:'0 8px 32px rgba(0,0,0,.65)', border:'2px solid rgba(255,255,255,.12)', flexShrink:0 }}>
+      {!loaded && (
+        <div className="shimmer" style={{ position:'absolute', inset:0, borderRadius:18,
+          display:'flex', alignItems:'center', justifyContent:'center' }}>
+          <EmojiImg emoji={item.emoji} size={size * 0.5} style={{ opacity:.4 }} />
+        </div>
+      )}
+      <img
+        src={src}
+        width={size} height={size}
+        alt={item.word}
+        style={{ display:'block', width:size, height:size, objectFit:'cover',
+          opacity: loaded ? 1 : 0, transition:'opacity .35s ease' }}
+        onLoad={() => setLoaded(true)}
+        onError={() => setFailed(true)}
+      />
+    </div>
+  );
 }
 
 /* ════════════════════════════════════════════
@@ -738,7 +778,7 @@ function GameplayScreen({ zone, level, vocabulary, onComplete, onExit }) {
           background:'rgba(255,255,255,.04)', border:`2px solid ${z.color}33`,
           borderRadius:'24px', padding:'26px 20px',
           textAlign:'center', position:'relative',
-          minHeight:'160px', display:'flex', flexDirection:'column',
+          minHeight:'220px', display:'flex', flexDirection:'column',
           alignItems:'center', justifyContent:'center', gap:'8px',
         }}>
           {showCoin && (
@@ -751,11 +791,11 @@ function GameplayScreen({ zone, level, vocabulary, onComplete, onExit }) {
 
           {level === 1 && (
             <>
-              <div key={`emoji-${idx}`} className="anim-bounce-in"
+              <div key={`photo-${idx}`} className="anim-bounce-in"
                 style={{ display:'flex', justifyContent:'center' }}>
-                <EmojiImg emoji={q.correct.emoji} size={88} />
+                <VocabImage item={q.correct} size={180} />
               </div>
-              <div style={{ color:'#64748b', fontSize:'.82rem', marginTop:'4px' }}>คำนี้ภาษาอังกฤษว่าอย่างไร?</div>
+              <div style={{ color:'#64748b', fontSize:'.82rem', marginTop:'10px' }}>คำนี้ภาษาอังกฤษว่าอย่างไร?</div>
             </>
           )}
 
@@ -776,9 +816,9 @@ function GameplayScreen({ zone, level, vocabulary, onComplete, onExit }) {
 
           {level === 3 && (
             <>
-              <div key={`emoji-${idx}`} className="anim-bounce-in"
+              <div key={`photo-${idx}`} className="anim-bounce-in"
                 style={{ display:'flex', justifyContent:'center' }}>
-                <EmojiImg emoji={q.correct.emoji} size={76} />
+                <VocabImage item={q.correct} size={130} />
               </div>
               <div style={{ color:'white', fontSize:'1.7rem', fontWeight:900,
                 letterSpacing:'6px', fontFamily:'monospace', marginTop:'4px' }}>
@@ -913,7 +953,7 @@ function ResultsScreen({ zone, level, result, onPlayAgain, onNextLevel, onGoMap 
               <div key={m.id} style={{ display:'flex', alignItems:'center', gap:'12px',
                 padding:'10px 14px',
                 borderBottom: i < uniqMistakes.length-1 ? '1px solid rgba(255,255,255,.05)' : 'none' }}>
-                <EmojiImg emoji={m.emoji} size={40} />
+                <VocabImage item={m} size={48} />
                 <div style={{ flex:1 }}>
                   <div style={{ color:'white', fontWeight:800 }}>{m.word}</div>
                   <div style={{ color:'#64748b', fontSize:'.78rem' }}>{m.thai}</div>
@@ -1087,7 +1127,7 @@ function AdminScreen({ vocabulary, onUpdate, onBack }) {
   const [editItem, setEditItem]   = useState(null);
   const [showImport, setShowImport] = useState(false);
   const [importText, setImportText] = useState('');
-  const [form, setForm]           = useState({ word:'', thai:'', emoji:'⭐', zone:'animal' });
+  const [form, setForm]           = useState({ word:'', thai:'', emoji:'⭐', zone:'animal', img:'' });
   const [filter, setFilter]       = useState('');
 
   const zoneVocab = vocabulary.filter(v => v.zone === tab &&
@@ -1096,13 +1136,13 @@ function AdminScreen({ vocabulary, onUpdate, onBack }) {
 
   const openAdd = () => {
     setEditItem(null);
-    setForm({ word:'', thai:'', emoji:'⭐', zone: tab });
+    setForm({ word:'', thai:'', emoji:'⭐', zone: tab, img:'' });
     setShowForm(true);
   };
 
   const openEdit = item => {
     setEditItem(item);
-    setForm({ word: item.word, thai: item.thai, emoji: item.emoji, zone: item.zone });
+    setForm({ word: item.word, thai: item.thai, emoji: item.emoji, zone: item.zone, img: item.img||'' });
     setShowForm(true);
   };
 
@@ -1237,7 +1277,7 @@ function AdminScreen({ vocabulary, onUpdate, onBack }) {
           <div key={item.id} style={{ display:'flex', alignItems:'center', gap:'10px',
             padding:'11px 13px', background:'rgba(255,255,255,.03)',
             border:'1px solid rgba(255,255,255,.055)', borderRadius:'12px', marginBottom:'7px' }}>
-            <EmojiImg emoji={item.emoji} size={38} />
+            <VocabImage item={item} size={48} />
             <div style={{ flex:1, minWidth:0 }}>
               <div style={{ color:'white', fontWeight:800, fontSize:'.92rem' }}>{item.word}</div>
               <div style={{ color:'#3d5070', fontSize:'.75rem' }}>{item.thai}</div>
@@ -1298,9 +1338,10 @@ function AdminScreen({ vocabulary, onUpdate, onBack }) {
 
             <div style={{ display:'flex', flexDirection:'column', gap:'14px' }}>
               {[
-                { key:'emoji', label:'Emoji / รูปสัญลักษณ์', placeholder:'🐱', hint:'วาง emoji จากแป้นพิมพ์หรือ copy มาวาง' },
                 { key:'word',  label:'คำศัพท์ภาษาอังกฤษ *',  placeholder:'Cat' },
                 { key:'thai',  label:'คำแปลภาษาไทย *',        placeholder:'แมว' },
+                { key:'emoji', label:'Emoji (fallback)',       placeholder:'🐱', hint:'ใช้เมื่อรูปภาพโหลดไม่ได้' },
+                { key:'img',   label:'URL รูปภาพ (Unsplash / ลิงก์ฟรี)', placeholder:'https://images.unsplash.com/photo-...', hint:'วาง URL รูปภาพ ฟรีจาก unsplash.com, pexels.com, pixabay.com' },
               ].map(f => (
                 <div key={f.key}>
                   <label style={{ color:'#64748b', fontSize:'.78rem', fontWeight:700,
@@ -1323,14 +1364,14 @@ function AdminScreen({ vocabulary, onUpdate, onBack }) {
               {/* Preview */}
               <div style={{ background:'rgba(255,255,255,.04)', border:'1px solid rgba(255,255,255,.07)',
                 borderRadius:'12px', padding:'12px', display:'flex', alignItems:'center', gap:'12px' }}>
-                <span style={{ fontSize:'2rem' }}>{form.emoji || '❓'}</span>
-                <div>
+                <VocabImage item={{ ...form, word: form.word||'preview' }} size={56} />
+                <div style={{ flex:1 }}>
                   <div style={{ color:'white', fontWeight:800 }}>{form.word || '—'}</div>
                   <div style={{ color:'#64748b', fontSize:'.8rem' }}>{form.thai || '—'}</div>
                 </div>
                 {form.word && (
                   <button onClick={() => speak(form.word)}
-                    style={{ marginLeft:'auto', background:'none', border:'none', fontSize:'1.2rem', cursor:'pointer' }}>
+                    style={{ background:'none', border:'none', fontSize:'1.2rem', cursor:'pointer' }}>
                     🔊
                   </button>
                 )}
