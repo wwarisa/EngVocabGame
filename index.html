@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0c1a3d">
+  <link rel="manifest" href="manifest.json">
+  <title>🏝️ Mystic Word Island</title>
+
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+      background: #060d1f;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #root {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #2d3f5c; border-radius: 4px; }
+
+    /* ── Animations ── */
+    @keyframes shake {
+      0%,100%{transform:translateX(0)}
+      15%{transform:translateX(-9px)}
+      30%{transform:translateX(9px)}
+      45%{transform:translateX(-6px)}
+      60%{transform:translateX(6px)}
+      75%{transform:translateX(-3px)}
+    }
+    @keyframes glowGreen {
+      0%,100%{box-shadow:0 0 8px #22c55e}
+      50%{box-shadow:0 0 28px #22c55e, 0 0 50px #4ade80}
+    }
+    @keyframes bounceIn {
+      0%{transform:scale(0.4);opacity:0}
+      55%{transform:scale(1.12)}
+      80%{transform:scale(0.95)}
+      100%{transform:scale(1);opacity:1}
+    }
+    @keyframes fadeUp {
+      from{opacity:0;transform:translateY(24px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+    @keyframes slideUp {
+      from{transform:translateY(100%)}
+      to{transform:translateY(0)}
+    }
+    @keyframes coinFloat {
+      0%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+      100%{opacity:0;transform:translate(-50%,-120%) scale(0.5)}
+    }
+    @keyframes starPop {
+      0%{transform:scale(0) rotate(-20deg);opacity:0}
+      70%{transform:scale(1.25) rotate(8deg)}
+      100%{transform:scale(1) rotate(0);opacity:1}
+    }
+    @keyframes pulse {
+      0%,100%{transform:scale(1)}
+      50%{transform:scale(1.15)}
+    }
+    @keyframes fogDrift {
+      0%,100%{opacity:.65;transform:translateX(0)}
+      50%{opacity:.85;transform:translateX(4px)}
+    }
+    @keyframes shimmer {
+      0%{background-position:-200% 0}
+      100%{background-position:200% 0}
+    }
+    @keyframes floatBob {
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-6px)}
+    }
+    @keyframes heartLose {
+      0%{transform:scale(1)}
+      30%{transform:scale(1.4)}
+      60%{transform:scale(0.8)}
+      100%{transform:scale(1)}
+    }
+
+    .anim-shake{animation:shake .45s ease-in-out}
+    .anim-glow{animation:glowGreen .5s ease-in-out}
+    .anim-bounce-in{animation:bounceIn .45s cubic-bezier(.175,.885,.32,1.275)}
+    .anim-fade-up{animation:fadeUp .35s ease-out}
+    .anim-slide-up{animation:slideUp .35s cubic-bezier(.25,.46,.45,.94)}
+    .anim-float{animation:floatBob 3s ease-in-out infinite}
+
+    /* ── Runestone ── */
+    .runestone {
+      position:relative;
+      border:none;
+      border-radius:18px;
+      cursor:pointer;
+      transition:transform .12s,box-shadow .12s;
+      -webkit-tap-highlight-color:transparent;
+      user-select:none;
+      touch-action:manipulation;
+    }
+    .runestone:active:not(:disabled){transform:scale(.94)}
+    .runestone:disabled{cursor:default}
+
+    /* ── Progress bar ── */
+    .prog-bar{height:8px;border-radius:6px;background:#1a2744;overflow:hidden}
+    .prog-fill{
+      height:100%;border-radius:6px;
+      background:linear-gradient(90deg,#22c55e,#4ade80);
+      transition:width .4s cubic-bezier(.25,.46,.45,.94);
+    }
+
+    /* ── Stars ── */
+    .star{display:inline-block;font-size:2.8rem;opacity:.2;transform:scale(0)}
+    .star.earned{opacity:1;animation:starPop .5s cubic-bezier(.175,.885,.32,1.275) forwards}
+
+    /* ── Fog on locked zones ── */
+    .fog{
+      position:absolute;inset:0;border-radius:18px;
+      background:linear-gradient(135deg,rgba(10,18,40,.85),rgba(10,18,40,.92));
+      pointer-events:none;
+      animation:fogDrift 4s ease-in-out infinite;
+    }
+
+    /* ── Shimmer skeleton ── */
+    .shimmer{
+      background:linear-gradient(90deg,#1a2744 25%,#243354 50%,#1a2744 75%);
+      background-size:200% 100%;
+      animation:shimmer 1.5s infinite;
+    }
+
+    /* ── Scrollable area ── */
+    .scroll-area{overflow-y:auto;-webkit-overflow-scrolling:touch}
+
+    /* ── Tap highlight fix ── */
+    button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+
+    /* ── Input ── */
+    input,select,textarea{
+      -webkit-appearance:none;
+      outline:none;
+      font-family:inherit;
+    }
+    input:focus,select:focus,textarea:focus{
+      border-color:#6366f1 !important;
+      box-shadow:0 0 0 3px rgba(99,102,241,.2);
+    }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef, useCallback, useMemo } = React;
+
+/* ════════════════════════════════════════════
+   CONSTANTS
+════════════════════════════════════════════ */
+const HEARTS_MAX = 3;
+const QUESTIONS_PER_ROUND = 10;
+const BASE_COINS = 10;
+
+const ZONES = [
+  { id:'animal',   name:'Animal Jungle',  thai:'ป่าสัตว์ป่า',             emoji:'🌴', color:'#22c55e', dark:'#14532d' },
+  { id:'food',     name:'Food Village',   thai:'หมู่บ้านเสบียง',           emoji:'🍖', color:'#f97316', dark:'#7c2d12' },
+  { id:'cabin',    name:'Ancient Cabin',  thai:'กระท่อมของใช้',            emoji:'🏚️', color:'#a855f7', dark:'#4a1d96' },
+  { id:'action',   name:'Action River',   thai:'แม่น้ำแห่งการเคลื่อนไหว', emoji:'🌊', color:'#0ea5e9', dark:'#0c4a6e' },
+  { id:'direction',name:'Crossroads',     thai:'ทางแยกบอกทิศ',             emoji:'🧭', color:'#eab308', dark:'#713f12' },
+];
+
+const LEVEL_INFO = [
+  { level:1, name:'Rune Recognition', thai:'จดจำรูน',    desc:'เห็นรูป → เลือกคำ',      icon:'👁️' },
+  { level:2, name:'Ancient Whispers', thai:'เสียงลึกลับ', desc:'ได้ยินเสียง → เลือกคำ',  icon:'👂' },
+  { level:3, name:'Spell Recall',     thai:'สะกดรหัส',   desc:'เห็นรูป → เติมตัวอักษร', icon:'✍️' },
+];
+
+const DEFAULT_VOCAB = [
+  // Animal
+  {id:1,zone:'animal',  word:'Cat',      thai:'แมว',               emoji:'🐱'},
+  {id:2,zone:'animal',  word:'Dog',      thai:'สุนัข',             emoji:'🐶'},
+  {id:3,zone:'animal',  word:'Bird',     thai:'นก',                emoji:'🐦'},
+  {id:4,zone:'animal',  word:'Monkey',   thai:'ลิง',               emoji:'🐵'},
+  {id:5,zone:'animal',  word:'Elephant', thai:'ช้าง',              emoji:'🐘'},
+  {id:6,zone:'animal',  word:'Tiger',    thai:'เสือ',              emoji:'🐯'},
+  {id:7,zone:'animal',  word:'Lion',     thai:'สิงโต',             emoji:'🦁'},
+  {id:8,zone:'animal',  word:'Frog',     thai:'กบ',                emoji:'🐸'},
+  {id:9,zone:'animal',  word:'Fox',      thai:'สุนัขจิ้งจอก',     emoji:'🦊'},
+  {id:10,zone:'animal', word:'Rabbit',   thai:'กระต่าย',           emoji:'🐰'},
+  // Food
+  {id:11,zone:'food',   word:'Apple',    thai:'แอปเปิล',           emoji:'🍎'},
+  {id:12,zone:'food',   word:'Bread',    thai:'ขนมปัง',            emoji:'🍞'},
+  {id:13,zone:'food',   word:'Milk',     thai:'นม',                emoji:'🥛'},
+  {id:14,zone:'food',   word:'Water',    thai:'น้ำ',               emoji:'💧'},
+  {id:15,zone:'food',   word:'Rice',     thai:'ข้าว',              emoji:'🍚'},
+  {id:16,zone:'food',   word:'Banana',   thai:'กล้วย',             emoji:'🍌'},
+  {id:17,zone:'food',   word:'Egg',      thai:'ไข่',               emoji:'🥚'},
+  {id:18,zone:'food',   word:'Cheese',   thai:'ชีส',               emoji:'🧀'},
+  {id:19,zone:'food',   word:'Orange',   thai:'ส้ม',               emoji:'🍊'},
+  {id:20,zone:'food',   word:'Fish',     thai:'ปลา',               emoji:'🐟'},
+  // Cabin
+  {id:21,zone:'cabin',  word:'Bed',      thai:'เตียงนอน',          emoji:'🛏️'},
+  {id:22,zone:'cabin',  word:'Chair',    thai:'เก้าอี้',           emoji:'🪑'},
+  {id:23,zone:'cabin',  word:'Table',    thai:'โต๊ะ',              emoji:'🏓'},
+  {id:24,zone:'cabin',  word:'Cup',      thai:'ถ้วย',              emoji:'☕'},
+  {id:25,zone:'cabin',  word:'Door',     thai:'ประตู',             emoji:'🚪'},
+  {id:26,zone:'cabin',  word:'Book',     thai:'หนังสือ',           emoji:'📚'},
+  {id:27,zone:'cabin',  word:'Lamp',     thai:'โคมไฟ',             emoji:'💡'},
+  {id:28,zone:'cabin',  word:'Window',   thai:'หน้าต่าง',          emoji:'🪟'},
+  {id:29,zone:'cabin',  word:'Key',      thai:'กุญแจ',             emoji:'🗝️'},
+  {id:30,zone:'cabin',  word:'Clock',    thai:'นาฬิกา',            emoji:'⏰'},
+  // Action
+  {id:31,zone:'action', word:'Run',      thai:'วิ่ง',              emoji:'🏃'},
+  {id:32,zone:'action', word:'Walk',     thai:'เดิน',              emoji:'🚶'},
+  {id:33,zone:'action', word:'Eat',      thai:'กิน',               emoji:'🍽️'},
+  {id:34,zone:'action', word:'Sleep',    thai:'นอนหลับ',           emoji:'😴'},
+  {id:35,zone:'action', word:'Jump',     thai:'กระโดด',            emoji:'🦘'},
+  {id:36,zone:'action', word:'Swim',     thai:'ว่ายน้ำ',           emoji:'🏊'},
+  {id:37,zone:'action', word:'Fly',      thai:'บิน',               emoji:'✈️'},
+  {id:38,zone:'action', word:'Read',     thai:'อ่าน',              emoji:'📖'},
+  {id:39,zone:'action', word:'Sing',     thai:'ร้องเพลง',          emoji:'🎤'},
+  {id:40,zone:'action', word:'Dance',    thai:'เต้นรำ',            emoji:'💃'},
+  // Direction
+  {id:41,zone:'direction',word:'Left',   thai:'ซ้าย',              emoji:'⬅️'},
+  {id:42,zone:'direction',word:'Right',  thai:'ขวา',               emoji:'➡️'},
+  {id:43,zone:'direction',word:'Up',     thai:'ขึ้น/บน',           emoji:'⬆️'},
+  {id:44,zone:'direction',word:'Down',   thai:'ลง/ล่าง',           emoji:'⬇️'},
+  {id:45,zone:'direction',word:'Stop',   thai:'หยุด',              emoji:'🛑'},
+  {id:46,zone:'direction',word:'Go',     thai:'ไป/เดินหน้า',       emoji:'🟢'},
+  {id:47,zone:'direction',word:'Turn',   thai:'เลี้ยว',            emoji:'↩️'},
+  {id:48,zone:'direction',word:'Fast',   thai:'เร็ว',              emoji:'⚡'},
+  {id:49,zone:'direction',word:'Slow',   thai:'ช้า',               emoji:'🐌'},
+  {id:50,zone:'direction',word:'Here',   thai:'ที่นี่',            emoji:'📍'},
+];
+
+/* ════════════════════════════════════════════
+   UTILITIES
+════════════════════════════════════════════ */
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function getOptions(correct, pool) {
+  const others = pool.filter(w => w.id !== correct.id);
+  const wrongs = shuffle(others).slice(0, 3);
+  return shuffle([correct, ...wrongs]);
+}
+
+function getMasked(word) {
+  const w = word.toUpperCase();
+  if (w.length <= 2) return w[0] + '_';
+  if (w.length === 3) return w[0] + '_' + w[2];
+  const inner = [];
+  for (let i = 1; i < w.length - 1; i++) inner.push(i);
+  const hide = shuffle(inner).slice(0, Math.max(1, Math.floor((w.length - 2) * 0.55)));
+  return w.split('').map((c, i) => hide.includes(i) ? '_' : c).join(' ');
+}
+
+let _audioCtx = null;
+function getAudioCtx() {
+  if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return _audioCtx;
+}
+
+function playTone(type) {
+  try {
+    const ctx = getAudioCtx();
+    if (ctx.state === 'suspended') ctx.resume();
+    if (type === 'correct') {
+      [[523,0],[659,.1],[784,.2]].forEach(([f,t]) => {
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = 'sine'; o.frequency.value = f;
+        g.gain.setValueAtTime(.25, ctx.currentTime + t);
+        g.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + t + .3);
+        o.connect(g); g.connect(ctx.destination);
+        o.start(ctx.currentTime + t); o.stop(ctx.currentTime + t + .3);
+      });
+    } else if (type === 'wrong') {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'sawtooth'; o.frequency.setValueAtTime(220, ctx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(110, ctx.currentTime + .25);
+      g.gain.setValueAtTime(.2, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + .3);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(); o.stop(ctx.currentTime + .3);
+    } else if (type === 'complete') {
+      [523,659,784,1047].forEach((f, i) => {
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = 'triangle'; o.frequency.value = f;
+        const t = i * .18;
+        g.gain.setValueAtTime(.3, ctx.currentTime + t);
+        g.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + t + .35);
+        o.connect(g); g.connect(ctx.destination);
+        o.start(ctx.currentTime + t); o.stop(ctx.currentTime + t + .35);
+      });
+    }
+  } catch(_) {}
+}
+
+function speak(word) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(word);
+  u.lang = 'en-US'; u.rate = .85; u.pitch = 1.05;
+  window.speechSynthesis.speak(u);
+}
+
+function useLS(key, def) {
+  const [val, setVal] = useState(() => {
+    try { const s = localStorage.getItem(key); return s ? JSON.parse(s) : def; }
+    catch { return def; }
+  });
+  const set = useCallback(nv => {
+    setVal(prev => {
+      const next = typeof nv === 'function' ? nv(prev) : nv;
+      try { localStorage.setItem(key, JSON.stringify(next)); } catch {}
+      return next;
+    });
+  }, [key]);
+  return [val, set];
+}
+
+/* ════════════════════════════════════════════
+   SMALL COMPONENTS
+════════════════════════════════════════════ */
+function Hearts({ count, max = 3, animLose }) {
+  return (
+    <div style={{ display:'flex', gap:'4px', alignItems:'center' }}>
+      {Array.from({ length: max }, (_, i) => (
+        <span key={i} style={{
+          fontSize:'1.3rem',
+          filter: i < count ? 'none' : 'grayscale(1) opacity(.3)',
+          animation: animLose && i === count ? 'heartLose .4s ease-in-out' : 'none',
+          display:'inline-block',
+        }}>❤️</span>
+      ))}
+    </div>
+  );
+}
+
+function ComboBadge({ combo }) {
+  if (combo < 2) return null;
+  const x = Math.min(combo, 5);
+  return (
+    <div style={{
+      background:'linear-gradient(135deg,#f59e0b,#ef4444)',
+      borderRadius:'20px', padding:'3px 10px',
+      display:'flex', alignItems:'center', gap:'4px',
+      fontSize:'.8rem', fontWeight:900, color:'white',
+      boxShadow:'0 0 14px rgba(239,68,68,.6)',
+      animation:'pulse .6s ease-in-out infinite',
+    }}>
+      🔥 x{x} Combo!
+    </div>
+  );
+}
+
+function ZoneCard({ zone, isUnlocked, stars, onClick }) {
+  const z = ZONES.find(z => z.id === zone.id);
+  const maxStars = 3;
+  return (
+    <div
+      onClick={isUnlocked ? onClick : undefined}
+      style={{
+        position:'relative', borderRadius:'18px', padding:'14px 16px',
+        marginBottom:'10px', cursor: isUnlocked ? 'pointer' : 'default',
+        background: isUnlocked
+          ? `linear-gradient(135deg,${z.dark}cc,${z.color}22)`
+          : 'rgba(10,18,40,.8)',
+        border:`2px solid ${isUnlocked ? z.color + '55' : '#1e2d4a'}`,
+        boxShadow: isUnlocked ? `0 4px 24px ${z.color}22` : 'none',
+        transition:'transform .15s, box-shadow .15s',
+        overflow:'hidden',
+      }}
+      onPointerDown={e => isUnlocked && (e.currentTarget.style.transform = 'scale(.97)')}
+      onPointerUp={e => isUnlocked && (e.currentTarget.style.transform = 'scale(1)')}
+      onPointerLeave={e => isUnlocked && (e.currentTarget.style.transform = 'scale(1)')}
+    >
+      {!isUnlocked && <div className="fog" />}
+      <div style={{ display:'flex', alignItems:'center', gap:'14px' }}>
+        <div style={{ fontSize:'2.2rem', lineHeight:1, filter: isUnlocked ? 'none' : 'grayscale(1) brightness(.4)' }}>
+          {isUnlocked ? z.emoji : '🔒'}
+        </div>
+        <div style={{ flex:1 }}>
+          <div style={{ color: isUnlocked ? 'white' : '#3d5070', fontWeight:800, fontSize:'.95rem' }}>{zone.name}</div>
+          <div style={{ color: isUnlocked ? '#94a3b8' : '#2d3f5c', fontSize:'.75rem', marginTop:'1px' }}>{zone.thai}</div>
+          {isUnlocked && (
+            <div style={{ display:'flex', gap:'2px', marginTop:'5px' }}>
+              {Array.from({ length: maxStars }, (_, i) => (
+                <span key={i} style={{ fontSize:'.9rem', filter: i < (stars||0) ? 'none' : 'grayscale(1) opacity(.25)' }}>⭐</span>
+              ))}
+            </div>
+          )}
+        </div>
+        {isUnlocked && (
+          <div style={{ color: z.color, fontSize:'1.4rem', fontWeight:900 }}>›</div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════
+   LEVEL SELECT MODAL
+════════════════════════════════════════════ */
+function LevelSelectModal({ zone, progress, onSelect, onClose }) {
+  const z = ZONES.find(z => z.id === zone.id);
+  const zp = progress[zone.id] || {};
+
+  return (
+    <div
+      style={{ position:'fixed', inset:0, background:'rgba(0,0,0,.88)', zIndex:999,
+        display:'flex', alignItems:'flex-end', justifyContent:'center' }}
+      onClick={onClose}
+    >
+      <div
+        className="anim-slide-up"
+        style={{ width:'100%', maxWidth:'480px', background:'#0f1f3d',
+          borderRadius:'26px 26px 0 0', padding:'24px 20px 36px',
+          borderTop:`3px solid ${z.color}` }}
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Zone header */}
+        <div style={{ display:'flex', alignItems:'center', gap:'12px', marginBottom:'20px' }}>
+          <span style={{ fontSize:'2rem' }}>{z.emoji}</span>
+          <div>
+            <div style={{ color:'white', fontWeight:800, fontSize:'1.05rem' }}>{zone.name}</div>
+            <div style={{ color:'#64748b', fontSize:'.75rem' }}>{zone.thai}</div>
+          </div>
+          <button onClick={onClose} style={{ marginLeft:'auto', background:'rgba(255,255,255,.08)', border:'none',
+            color:'#94a3b8', borderRadius:'10px', padding:'6px 10px', cursor:'pointer', fontSize:'1rem' }}>✕</button>
+        </div>
+
+        {LEVEL_INFO.map(lv => {
+          const prevKey = `level${lv.level - 1}`;
+          const unlocked = lv.level === 1 || (zp[prevKey]?.stars || 0) >= 1;
+          const earnedStars = zp[`level${lv.level}`]?.stars || 0;
+
+          return (
+            <div
+              key={lv.level}
+              onClick={unlocked ? () => onSelect(lv.level) : undefined}
+              style={{
+                display:'flex', alignItems:'center', gap:'12px',
+                padding:'14px', borderRadius:'14px', marginBottom:'10px',
+                cursor: unlocked ? 'pointer' : 'default',
+                background: unlocked ? `${z.color}18` : 'rgba(10,18,40,.6)',
+                border:`1.5px solid ${unlocked ? z.color + '44' : '#1e2d4a'}`,
+                opacity: unlocked ? 1 : .45,
+                transition:'transform .1s',
+              }}
+              onPointerDown={e => unlocked && (e.currentTarget.style.transform = 'scale(.97)')}
+              onPointerUp={e => unlocked && (e.currentTarget.style.transform = 'scale(1)')}
+              onPointerLeave={e => unlocked && (e.currentTarget.style.transform = 'scale(1)')}
+            >
+              <span style={{ fontSize:'1.5rem' }}>{unlocked ? lv.icon : '🔒'}</span>
+              <div style={{ flex:1 }}>
+                <div style={{ color: unlocked ? 'white' : '#3d5070', fontWeight:700, fontSize:'.9rem' }}>
+                  Lv.{lv.level} — {lv.name}
+                </div>
+                <div style={{ color:'#64748b', fontSize:'.75rem' }}>{lv.desc}</div>
+              </div>
+              <div style={{ display:'flex', gap:'2px' }}>
+                {[1,2,3].map(i => (
+                  <span key={i} style={{ fontSize:'.85rem', filter: i <= earnedStars ? 'none' : 'grayscale(1) opacity(.2)' }}>⭐</span>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════
+   RUNESTONE BUTTON
+════════════════════════════════════════════ */
+function RunestoneButton({ option, state, onClick, color }) {
+  const styles = {
+    default:       { bg:'rgba(14,26,52,.95)', border:'#2d4070', glow:'none' },
+    correct:       { bg:'rgba(20,83,45,.95)', border:'#22c55e', glow:`0 0 20px #22c55e88` },
+    wrong:         { bg:'rgba(90,20,20,.95)', border:'#ef4444', glow:`0 0 16px #ef444466` },
+    show_correct:  { bg:'rgba(20,60,40,.85)', border:'#22c55e88', glow:'none' },
+    dimmed:        { bg:'rgba(14,26,52,.5)', border:'#1e2d4a', glow:'none' },
+  };
+  const s = styles[state] || styles.default;
+
+  return (
+    <button
+      className={`runestone ${state === 'wrong' ? 'anim-shake' : ''} ${state === 'correct' ? 'anim-glow' : ''}`}
+      onClick={onClick}
+      disabled={state !== 'default'}
+      style={{
+        width:'100%', padding:'13px 10px',
+        background: s.bg,
+        border:`2px solid ${s.border}`,
+        borderRadius:'16px',
+        color:'white', fontSize:'1rem', fontWeight:800, fontFamily:'inherit',
+        boxShadow: s.glow,
+        transition:'border-color .15s, background .15s',
+        textAlign:'center',
+        minHeight:'58px',
+        display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+        gap:'2px',
+      }}
+    >
+      {state === 'correct' && <span style={{ fontSize:'.65rem', color:'#4ade80', display:'block' }}>✓ ถูกต้อง!</span>}
+      {state === 'wrong'   && <span style={{ fontSize:'.65rem', color:'#f87171', display:'block' }}>✗ ผิด</span>}
+      {state === 'show_correct' && <span style={{ fontSize:'.65rem', color:'#86efac', display:'block' }}>← คำตอบที่ถูก</span>}
+      <span>{option.word}</span>
+    </button>
+  );
+}
+
+/* ════════════════════════════════════════════
+   GAMEPLAY SCREEN
+════════════════════════════════════════════ */
+function GameplayScreen({ zone, level, vocabulary, onComplete, onExit }) {
+  const z = ZONES.find(z => z.id === zone.id);
+  const pool = vocabulary.filter(v => v.zone === zone.id);
+
+  const questions = useMemo(() => {
+    const repeated = [];
+    while (repeated.length < QUESTIONS_PER_ROUND) repeated.push(...shuffle(pool));
+    const qs = repeated.slice(0, QUESTIONS_PER_ROUND);
+    return qs.map(q => ({
+      correct: q,
+      options: getOptions(q, pool),
+      masked: getMasked(q.word),
+    }));
+  }, [zone.id, level]);
+
+  const [idx, setIdx]           = useState(0);
+  const [hearts, setHearts]     = useState(HEARTS_MAX);
+  const [combo, setCombo]       = useState(0);
+  const [coins, setCoins]       = useState(0);
+  const [mistakes, setMistakes] = useState([]);
+  const [selected, setSelected] = useState(null);  // id
+  const [feedback, setFeedback] = useState(null);   // 'correct'|'wrong'
+  const [showCoin, setShowCoin] = useState(false);
+  const [busy, setBusy]         = useState(false);
+  const [animHeart, setAnimHeart] = useState(false);
+  const [exitConfirm, setExitConfirm] = useState(false);
+
+  const q = questions[idx];
+
+  // Level 2: auto-play on new question
+  useEffect(() => {
+    if (level === 2 && q) setTimeout(() => speak(q.correct.word), 350);
+  }, [idx, level]);
+
+  const answer = useCallback((opt) => {
+    if (busy) return;
+    setBusy(true);
+    setSelected(opt.id);
+    const ok = opt.id === q.correct.id;
+
+    if (ok) {
+      const newCombo = combo + 1;
+      setCombo(newCombo);
+      const mult = newCombo >= 5 ? 2 : newCombo >= 3 ? 1.5 : 1;
+      const earned = Math.round(BASE_COINS * mult);
+      setCoins(c => c + earned);
+      setFeedback('correct');
+      setShowCoin(true);
+      playTone('correct');
+      speak(q.correct.word);
+      setTimeout(() => setShowCoin(false), 900);
+
+      setTimeout(() => {
+        const nextIdx = idx + 1;
+        if (nextIdx < questions.length) {
+          setIdx(nextIdx); setFeedback(null); setSelected(null); setBusy(false);
+        } else {
+          playTone('complete');
+          onComplete({ coins: coins + earned, mistakes, hearts, failed: false });
+        }
+      }, 900);
+    } else {
+      setFeedback('wrong');
+      setCombo(0);
+      setAnimHeart(true);
+      setTimeout(() => setAnimHeart(false), 500);
+      const newHearts = hearts - 1;
+      setHearts(newHearts);
+      setMistakes(m => [...m, q.correct]);
+      playTone('wrong');
+
+      setTimeout(() => {
+        if (newHearts <= 0) {
+          onComplete({ coins: 0, mistakes: [...mistakes, q.correct], hearts: 0, failed: true });
+          return;
+        }
+        const nextIdx = idx + 1;
+        if (nextIdx < questions.length) {
+          setTimeout(() => { setIdx(nextIdx); setFeedback(null); setSelected(null); setBusy(false); }, 300);
+        } else {
+          playTone('complete');
+          onComplete({ coins, mistakes: [...mistakes, q.correct], hearts: newHearts, failed: false });
+        }
+      }, 1300);
+    }
+  }, [busy, q, combo, hearts, coins, mistakes, idx, questions.length]);
+
+  const optState = (opt) => {
+    if (!selected) return 'default';
+    if (opt.id === q.correct.id) return feedback === 'correct' ? 'correct' : 'show_correct';
+    if (opt.id === selected && feedback === 'wrong') return 'wrong';
+    return selected ? 'dimmed' : 'default';
+  };
+
+  return (
+    <div style={{ minHeight:'100vh', background:`linear-gradient(180deg,#060d1f 0%,${z.dark}88 100%)`,
+      display:'flex', flexDirection:'column' }}>
+
+      {/* ─ Top bar ─ */}
+      <div style={{ padding:'14px 14px 0', display:'flex', alignItems:'center', gap:'10px' }}>
+        <button
+          onClick={() => setExitConfirm(true)}
+          style={{ background:'rgba(255,255,255,.08)', border:'none', color:'#94a3b8',
+            borderRadius:'10px', padding:'8px 11px', cursor:'pointer', fontSize:'.9rem', fontWeight:700, flexShrink:0 }}
+        >
+          ✕ ออก
+        </button>
+        <div style={{ flex:1 }}>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'5px' }}>
+            <span style={{ color:'#64748b', fontSize:'.75rem', fontWeight:700 }}>{idx+1} / {questions.length}</span>
+            <Hearts count={hearts} animLose={animHeart} />
+          </div>
+          <div className="prog-bar">
+            <div className="prog-fill" style={{ width:`${((idx) / questions.length) * 100}%` }} />
+          </div>
+        </div>
+        <ComboBadge combo={combo} />
+      </div>
+
+      {/* ─ Zone badge ─ */}
+      <div style={{ textAlign:'center', padding:'6px', marginTop:'2px' }}>
+        <span style={{ color:z.color, fontSize:'.78rem', fontWeight:800 }}>
+          {z.emoji} {zone.name} · Lv.{level}
+        </span>
+      </div>
+
+      {/* ─ Question card ─ */}
+      <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center',
+        justifyContent:'center', padding:'12px 14px', gap:'14px' }}>
+
+        <div style={{
+          width:'100%',
+          background:'rgba(255,255,255,.04)', border:`2px solid ${z.color}33`,
+          borderRadius:'24px', padding:'26px 20px',
+          textAlign:'center', position:'relative',
+          minHeight:'160px', display:'flex', flexDirection:'column',
+          alignItems:'center', justifyContent:'center', gap:'8px',
+        }}>
+          {showCoin && (
+            <div style={{ position:'absolute', top:'50%', left:'50%',
+              animation:'coinFloat .9s ease-out forwards',
+              fontSize:'1.6rem', pointerEvents:'none', zIndex:10 }}>
+              +💰
+            </div>
+          )}
+
+          {level === 1 && (
+            <>
+              <div key={`emoji-${idx}`} className="anim-bounce-in"
+                style={{ fontSize:'5rem', lineHeight:1, filter:'drop-shadow(0 6px 16px rgba(0,0,0,.6))' }}>
+                {q.correct.emoji}
+              </div>
+              <div style={{ color:'#64748b', fontSize:'.82rem' }}>คำนี้ภาษาอังกฤษว่าอย่างไร?</div>
+            </>
+          )}
+
+          {level === 2 && (
+            <>
+              <div style={{ fontSize:'3.5rem', lineHeight:1 }}>🔊</div>
+              <div style={{ color:'#e2e8f0', fontSize:'1.3rem', fontWeight:800 }}>{q.correct.thai}</div>
+              <button
+                onClick={() => speak(q.correct.word)}
+                style={{ marginTop:'6px', background:`${z.color}22`, border:`1.5px solid ${z.color}55`,
+                  borderRadius:'20px', padding:'6px 18px', color:z.color, fontSize:'.82rem',
+                  fontWeight:800, cursor:'pointer', fontFamily:'inherit' }}
+              >
+                🔊 ฟังอีกครั้ง
+              </button>
+            </>
+          )}
+
+          {level === 3 && (
+            <>
+              <div key={`emoji-${idx}`} className="anim-bounce-in"
+                style={{ fontSize:'4rem', lineHeight:1 }}>
+                {q.correct.emoji}
+              </div>
+              <div style={{ color:'white', fontSize:'1.7rem', fontWeight:900,
+                letterSpacing:'6px', fontFamily:'monospace', marginTop:'4px' }}>
+                {q.masked}
+              </div>
+              <div style={{ color:'#64748b', fontSize:'.78rem' }}>เลือกคำที่สะกดถูกต้อง</div>
+            </>
+          )}
+        </div>
+
+        {/* ─ Runestones 2×2 ─ */}
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'10px', width:'100%' }}>
+          {q.options.map(opt => (
+            <RunestoneButton
+              key={opt.id}
+              option={opt}
+              state={optState(opt)}
+              onClick={() => answer(opt)}
+              color={z.color}
+            />
+          ))}
+        </div>
+
+        {/* Coins */}
+        <div style={{ color:'#fbbf24', fontWeight:700, fontSize:'.88rem' }}>
+          💰 {coins} coins
+        </div>
+      </div>
+
+      {/* Exit confirm dialog */}
+      {exitConfirm && (
+        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,.88)', zIndex:999,
+          display:'flex', alignItems:'center', justifyContent:'center', padding:'20px' }}
+          onClick={() => setExitConfirm(false)}>
+          <div className="anim-bounce-in"
+            style={{ background:'#0f1f3d', borderRadius:'20px', padding:'24px', width:'100%', maxWidth:'320px',
+              border:'1.5px solid #2d4070', textAlign:'center' }}
+            onClick={e => e.stopPropagation()}>
+            <div style={{ fontSize:'2rem', marginBottom:'10px' }}>🚪</div>
+            <div style={{ color:'white', fontWeight:800, fontSize:'1rem', marginBottom:'6px' }}>ออกจากด่าน?</div>
+            <div style={{ color:'#64748b', fontSize:'.82rem', marginBottom:'20px' }}>ความคืบหน้าในด่านนี้จะหายไป</div>
+            <div style={{ display:'flex', gap:'10px' }}>
+              <button onClick={() => setExitConfirm(false)}
+                style={btnS('#2d4070')}>ยกเลิก</button>
+              <button onClick={onExit}
+                style={btnS('#ef4444')}>ออก</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════
+   RESULTS SCREEN
+════════════════════════════════════════════ */
+function ResultsScreen({ zone, level, result, onPlayAgain, onNextLevel, onGoMap }) {
+  const z = ZONES.find(z => z.id === zone.id);
+  const { coins, mistakes, hearts, failed } = result;
+  const uniqMistakes = [...new Map(mistakes.map(m => [m.id, m])).values()];
+
+  const stars = failed ? 0 :
+    mistakes.length === 0 ? 3 :
+    mistakes.length <= 3  ? 2 : 1;
+
+  const [animStar, setAnimStar] = useState(0);
+  useEffect(() => {
+    if (failed) return;
+    const ts = [300, 600, 900].map((t, i) =>
+      setTimeout(() => setAnimStar(i + 1), t));
+    return () => ts.forEach(clearTimeout);
+  }, [failed]);
+
+  return (
+    <div style={{ minHeight:'100vh', paddingBottom:'30px',
+      background: failed
+        ? 'linear-gradient(180deg,#2d0a0a,#060d1f)'
+        : `linear-gradient(180deg,${z.dark}cc 0%,#060d1f 55%)`,
+      display:'flex', flexDirection:'column', padding:'0 16px' }}>
+
+      {/* Header */}
+      <div style={{ textAlign:'center', paddingTop:'32px', marginBottom:'20px' }}>
+        <div className="anim-bounce-in" style={{ fontSize:'3.5rem', marginBottom:'10px' }}>
+          {failed ? '💔' : stars === 3 ? '🏆' : stars === 2 ? '🎉' : '✅'}
+        </div>
+        <h2 style={{ color:'white', fontSize:'1.5rem', fontWeight:900,
+          textShadow:`0 2px 16px ${failed ? '#ef4444' : z.color}88` }}>
+          {failed ? 'ความพยายามหมดแล้ว!' : 'ผ่านด่านแล้ว!'}
+        </h2>
+        {!failed && (
+          <div style={{ color:'#64748b', fontSize:'.82rem', marginTop:'4px' }}>
+            {zone.name} · Level {level}
+          </div>
+        )}
+      </div>
+
+      {/* Stars */}
+      {!failed && (
+        <div style={{ display:'flex', justifyContent:'center', gap:'14px', marginBottom:'20px' }}>
+          {[1,2,3].map(i => (
+            <span key={i} className={`star ${animStar >= i ? 'earned' : ''}`}
+              style={{ animationDelay:`${(i-1)*.3}s` }}>⭐</span>
+          ))}
+        </div>
+      )}
+
+      {/* Stats row */}
+      <div style={{ display:'flex', gap:'10px', marginBottom:'16px' }}>
+        {[
+          { icon:'💰', val: coins,           label:'Coins',    color:'#fbbf24' },
+          { icon:'❌', val: mistakes.length,  label:'ตอบผิด',  color:'#f87171' },
+          { icon:'❤️', val: hearts,           label:'เหลือ',   color:'#f87171' },
+        ].map(s => (
+          <div key={s.label} style={{ flex:1, textAlign:'center', background:'rgba(255,255,255,.04)',
+            border:'1px solid rgba(255,255,255,.07)', borderRadius:'14px', padding:'12px 8px' }}>
+            <div style={{ color:s.color, fontSize:'1.3rem', fontWeight:900 }}>{s.icon} {s.val}</div>
+            <div style={{ color:'#475569', fontSize:'.72rem', marginTop:'2px' }}>{s.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Mistake review */}
+      {uniqMistakes.length > 0 && (
+        <div style={{ marginBottom:'20px' }}>
+          <div style={{ color:'#94a3b8', fontSize:'.82rem', fontWeight:700, marginBottom:'8px' }}>
+            📝 คำที่ตอบผิด ({uniqMistakes.length} คำ) — ทบทวนก่อนไปต่อ
+          </div>
+          <div style={{ background:'rgba(255,255,255,.03)', borderRadius:'14px',
+            border:'1px solid rgba(255,255,255,.07)', maxHeight:'220px', overflowY:'auto' }}>
+            {uniqMistakes.map((m, i) => (
+              <div key={m.id} style={{ display:'flex', alignItems:'center', gap:'12px',
+                padding:'10px 14px',
+                borderBottom: i < uniqMistakes.length-1 ? '1px solid rgba(255,255,255,.05)' : 'none' }}>
+                <span style={{ fontSize:'1.6rem' }}>{m.emoji}</span>
+                <div style={{ flex:1 }}>
+                  <div style={{ color:'white', fontWeight:800 }}>{m.word}</div>
+                  <div style={{ color:'#64748b', fontSize:'.78rem' }}>{m.thai}</div>
+                </div>
+                <button onClick={() => speak(m.word)}
+                  style={{ background:'none', border:'none', fontSize:'1.2rem', cursor:'pointer' }}>
+                  🔊
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Buttons */}
+      <div style={{ display:'flex', flexDirection:'column', gap:'10px', marginTop:'auto' }}>
+        {failed ? (
+          <button onClick={onPlayAgain} style={btnS('#ef4444', true)}>🔄 ลองใหม่อีกครั้ง</button>
+        ) : (
+          <>
+            {level < 3 && (
+              <button onClick={onNextLevel} style={btnS(z.color, true)}>
+                ▶ ด่านถัดไป — Lv.{level + 1} {LEVEL_INFO[level].name}
+              </button>
+            )}
+            <button onClick={onPlayAgain} style={btnS('#334155', true)}>🔄 เล่นซ้ำ</button>
+          </>
+        )}
+        <button onClick={onGoMap}
+          style={{ ...btnS('transparent', true), border:'1.5px solid #1e2d4a', color:'#64748b' }}>
+          🗺️ กลับแผนที่เกาะ
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function btnS(bg, wide) {
+  return {
+    width: wide ? '100%' : '50%',
+    padding:'13px',
+    borderRadius:'14px',
+    border:'none',
+    background: bg,
+    color:'white',
+    fontSize:'.95rem',
+    fontWeight:800,
+    cursor:'pointer',
+    fontFamily:'inherit',
+    transition:'opacity .15s',
+  };
+}
+
+/* ════════════════════════════════════════════
+   HOME SCREEN
+════════════════════════════════════════════ */
+function HomeScreen({ vocabulary, playerData, progress, onSelectZone, onAdmin }) {
+  const [modal, setModal] = useState(null);
+
+  const zoneUnlocked = i => {
+    if (i === 0) return true;
+    const prev = ZONES[i-1];
+    return (progress[prev.id]?.level1?.stars || 0) >= 1;
+  };
+
+  const zoneStars = id => {
+    const zp = progress[id] || {};
+    return Math.max(zp.level1?.stars||0, zp.level2?.stars||0, zp.level3?.stars||0);
+  };
+
+  const totalCoins = playerData.coins || 0;
+  const totalWords = vocabulary.length;
+  const unlockedCount = ZONES.filter((_, i) => zoneUnlocked(i)).length;
+
+  return (
+    <div style={{ minHeight:'100vh', paddingBottom:'24px',
+      background:'linear-gradient(180deg,#060d1f 0%,#081628 50%,#060d1f 100%)' }}>
+
+      {/* ─ Header ─ */}
+      <div style={{ padding:'20px 16px 16px',
+        background:'linear-gradient(180deg,rgba(6,13,31,.95),transparent)' }}>
+
+        {/* Title row */}
+        <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:'14px' }}>
+          <div>
+            <h1 style={{ color:'white', fontSize:'1.15rem', fontWeight:900, lineHeight:1.2 }}>
+              🏝️ Mystic Word Island
+            </h1>
+            <div style={{ color:'#3d5070', fontSize:'.72rem', marginTop:'2px' }}>
+              เกาะลึกลับแห่งปริศนาคำศัพท์
+            </div>
+          </div>
+          <div style={{ display:'flex', alignItems:'center', gap:'8px' }}>
+            <div style={{ background:'rgba(251,191,36,.12)', border:'1.5px solid rgba(251,191,36,.35)',
+              borderRadius:'20px', padding:'5px 13px', color:'#fbbf24', fontWeight:800, fontSize:'.88rem' }}>
+              💰 {totalCoins}
+            </div>
+          </div>
+        </div>
+
+        {/* Explorer card */}
+        <div style={{ background:'rgba(255,255,255,.04)', border:'1px solid rgba(255,255,255,.07)',
+          borderRadius:'16px', padding:'13px 14px', display:'flex', alignItems:'center', gap:'12px' }}>
+          <div className="anim-float" style={{ fontSize:'2.2rem' }}>🧭</div>
+          <div style={{ flex:1 }}>
+            <div style={{ color:'white', fontWeight:800, fontSize:'.9rem' }}>นักสำรวจฝึกหัด</div>
+            <div style={{ color:'#3d5070', fontSize:'.72rem', marginTop:'2px' }}>
+              {totalWords} คำศัพท์ · {unlockedCount} โซนที่ปลดล็อก
+            </div>
+          </div>
+          <button
+            onClick={onAdmin}
+            style={{ background:'rgba(99,102,241,.18)', border:'1.5px solid rgba(99,102,241,.4)',
+              borderRadius:'10px', padding:'7px 11px', color:'#818cf8', fontSize:'.78rem',
+              fontWeight:800, cursor:'pointer', fontFamily:'inherit' }}>
+            ⚙️ Admin
+          </button>
+        </div>
+      </div>
+
+      {/* ─ Map ─ */}
+      <div style={{ padding:'0 14px' }}>
+        <div style={{ color:'#2d4070', fontSize:'.75rem', fontWeight:800, marginBottom:'10px',
+          textTransform:'uppercase', letterSpacing:'1.5px' }}>
+          🗺️ แผนที่เกาะ
+        </div>
+
+        {ZONES.map((zone, i) => (
+          <div key={zone.id}>
+            <ZoneCard
+              zone={zone}
+              isUnlocked={zoneUnlocked(i)}
+              stars={zoneStars(zone.id)}
+              onClick={() => setModal(zone)}
+            />
+            {i < ZONES.length - 1 && (
+              <div style={{ display:'flex', flexDirection:'column', alignItems:'center',
+                gap:'3px', margin:'-2px 0 8px', opacity:.3 }}>
+                <div style={{ width:'2px', height:'8px', background:'#2d4070' }} />
+                <div style={{ width:'6px', height:'6px', borderRadius:'50%', background:'#2d4070' }} />
+                <div style={{ width:'2px', height:'8px', background:'#2d4070' }} />
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* ─ Version ─ */}
+      <div style={{ textAlign:'center', color:'#1a2744', fontSize:'.68rem', marginTop:'16px' }}>
+        Mystic Word Island v1.0 · เรียนรู้ภาษาอังกฤษแบบผจญภัย
+      </div>
+
+      {modal && (
+        <LevelSelectModal
+          zone={modal}
+          progress={progress}
+          onSelect={lv => { onSelectZone(modal, lv); setModal(null); }}
+          onClose={() => setModal(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════
+   ADMIN SCREEN
+════════════════════════════════════════════ */
+function AdminScreen({ vocabulary, onUpdate, onBack }) {
+  const [tab, setTab]             = useState('animal');
+  const [showForm, setShowForm]   = useState(false);
+  const [editItem, setEditItem]   = useState(null);
+  const [showImport, setShowImport] = useState(false);
+  const [importText, setImportText] = useState('');
+  const [form, setForm]           = useState({ word:'', thai:'', emoji:'⭐', zone:'animal' });
+  const [filter, setFilter]       = useState('');
+
+  const zoneVocab = vocabulary.filter(v => v.zone === tab &&
+    (!filter || v.word.toLowerCase().includes(filter.toLowerCase()) || v.thai.includes(filter)));
+  const activeZ = ZONES.find(z => z.id === tab);
+
+  const openAdd = () => {
+    setEditItem(null);
+    setForm({ word:'', thai:'', emoji:'⭐', zone: tab });
+    setShowForm(true);
+  };
+
+  const openEdit = item => {
+    setEditItem(item);
+    setForm({ word: item.word, thai: item.thai, emoji: item.emoji, zone: item.zone });
+    setShowForm(true);
+  };
+
+  const save = () => {
+    if (!form.word.trim() || !form.thai.trim()) return;
+    if (editItem) {
+      onUpdate(vocabulary.map(v => v.id === editItem.id ? { ...v, ...form } : v));
+    } else {
+      const newId = Math.max(0, ...vocabulary.map(v => v.id)) + 1;
+      onUpdate([...vocabulary, { id: newId, ...form }]);
+    }
+    setShowForm(false); setEditItem(null);
+  };
+
+  const del = id => {
+    if (!window.confirm('ลบคำศัพท์นี้?')) return;
+    onUpdate(vocabulary.filter(v => v.id !== id));
+  };
+
+  const reset = () => {
+    if (!window.confirm('รีเซ็ตคำศัพท์ทั้งหมดกลับค่าเริ่มต้น?')) return;
+    onUpdate(DEFAULT_VOCAB);
+  };
+
+  const exportJSON = () => {
+    const blob = new Blob([JSON.stringify(vocabulary, null, 2)], { type:'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'mystic-vocab.json';
+    a.click();
+  };
+
+  const doImport = () => {
+    try {
+      const data = JSON.parse(importText);
+      if (!Array.isArray(data)) throw new Error();
+      onUpdate(data);
+      setShowImport(false); setImportText('');
+      alert(`นำเข้าสำเร็จ! ${data.length} คำศัพท์`);
+    } catch { alert('ข้อมูล JSON ไม่ถูกต้อง กรุณาตรวจสอบ format'); }
+  };
+
+  const iS = { // input style
+    width:'100%', background:'#060d1f', border:'1.5px solid #1e2d4a',
+    borderRadius:'10px', padding:'10px 13px', color:'white',
+    fontSize:'.95rem', fontFamily:'inherit', display:'block',
+  };
+
+  return (
+    <div style={{ minHeight:'100vh', background:'#060d1f', paddingBottom:'40px' }}>
+
+      {/* ─ Admin Header ─ */}
+      <div style={{ background:'linear-gradient(135deg,#1a1740,#2d2a6e)',
+        padding:'18px 16px', borderBottom:'1px solid rgba(99,102,241,.25)' }}>
+        <div style={{ display:'flex', alignItems:'center', gap:'12px', marginBottom:'14px' }}>
+          <button onClick={onBack}
+            style={{ background:'rgba(255,255,255,.08)', border:'none', color:'white',
+              borderRadius:'10px', padding:'8px 14px', cursor:'pointer', fontFamily:'inherit',
+              fontWeight:700, fontSize:'.85rem' }}>
+            ← กลับ
+          </button>
+          <div>
+            <div style={{ color:'white', fontWeight:900, fontSize:'1.05rem' }}>⚙️ Admin Panel</div>
+            <div style={{ color:'#7c86e8', fontSize:'.72rem' }}>จัดการคลังคำศัพท์ · {vocabulary.length} คำ</div>
+          </div>
+        </div>
+
+        {/* Action row */}
+        <div style={{ display:'flex', gap:'8px', flexWrap:'wrap' }}>
+          {[
+            { label:'+ เพิ่มคำ', color:'#22c55e', action: openAdd },
+            { label:'📤 Export', color:'#0ea5e9', action: exportJSON },
+            { label:'📥 Import', color:'#f59e0b', action: () => setShowImport(true) },
+            { label:'🔄 Reset',  color:'#ef4444', action: reset },
+          ].map(b => (
+            <button key={b.label} onClick={b.action} style={{
+              background:`${b.color}22`, border:`1.5px solid ${b.color}55`,
+              borderRadius:'10px', padding:'6px 13px', color: b.color,
+              fontWeight:800, fontSize:'.78rem', cursor:'pointer', fontFamily:'inherit' }}>
+              {b.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ─ Zone tabs ─ */}
+      <div style={{ display:'flex', overflowX:'auto', gap:'8px',
+        padding:'12px 14px', background:'#060d1f',
+        borderBottom:'1px solid #0e1c36', scrollbarWidth:'none' }}>
+        {ZONES.map(z => (
+          <button key={z.id} onClick={() => { setTab(z.id); setFilter(''); }} style={{
+            flexShrink:0, padding:'6px 14px', borderRadius:'20px',
+            border:`1.5px solid ${tab === z.id ? z.color : '#1e2d4a'}`,
+            background: tab === z.id ? `${z.color}22` : 'transparent',
+            color: tab === z.id ? z.color : '#3d5070',
+            fontWeight:800, fontSize:'.78rem', cursor:'pointer', fontFamily:'inherit',
+            whiteSpace:'nowrap' }}>
+            {z.emoji} {z.name}
+          </button>
+        ))}
+      </div>
+
+      {/* ─ Search + count ─ */}
+      <div style={{ padding:'12px 14px 6px', display:'flex', gap:'10px', alignItems:'center' }}>
+        <input
+          value={filter}
+          onChange={e => setFilter(e.target.value)}
+          placeholder="🔍 ค้นหาคำศัพท์..."
+          style={{ ...iS, flex:1, padding:'8px 12px', fontSize:'.85rem' }}
+        />
+        <span style={{ color:'#3d5070', fontSize:'.78rem', whiteSpace:'nowrap', flexShrink:0 }}>
+          {zoneVocab.length} คำ
+        </span>
+      </div>
+
+      {zoneVocab.length < 4 && !filter && (
+        <div style={{ margin:'0 14px 8px', padding:'8px 12px', background:'rgba(239,68,68,.1)',
+          border:'1px solid rgba(239,68,68,.3)', borderRadius:'10px',
+          color:'#f87171', fontSize:'.78rem' }}>
+          ⚠️ ต้องมีอย่างน้อย 4 คำเพื่อให้เล่นเกมได้
+        </div>
+      )}
+
+      {/* ─ Word list ─ */}
+      <div style={{ padding:'0 14px' }}>
+        {zoneVocab.length === 0 ? (
+          <div style={{ textAlign:'center', color:'#2d4070', padding:'40px 20px', fontSize:'.88rem' }}>
+            {filter ? 'ไม่พบคำศัพท์ที่ค้นหา' : 'ยังไม่มีคำศัพท์ในโซนนี้'}<br/>
+            {!filter && <span style={{ fontSize:'.78rem' }}>กด "+ เพิ่มคำ" เพื่อเริ่มต้น</span>}
+          </div>
+        ) : zoneVocab.map(item => (
+          <div key={item.id} style={{ display:'flex', alignItems:'center', gap:'10px',
+            padding:'11px 13px', background:'rgba(255,255,255,.03)',
+            border:'1px solid rgba(255,255,255,.055)', borderRadius:'12px', marginBottom:'7px' }}>
+            <span style={{ fontSize:'1.7rem', lineHeight:1 }}>{item.emoji}</span>
+            <div style={{ flex:1, minWidth:0 }}>
+              <div style={{ color:'white', fontWeight:800, fontSize:'.92rem' }}>{item.word}</div>
+              <div style={{ color:'#3d5070', fontSize:'.75rem' }}>{item.thai}</div>
+            </div>
+            <button onClick={() => speak(item.word)}
+              style={{ background:'none', border:'none', fontSize:'1.1rem', cursor:'pointer', padding:'4px' }}>
+              🔊
+            </button>
+            <button onClick={() => openEdit(item)}
+              style={{ background:'rgba(251,191,36,.1)', border:'1px solid rgba(251,191,36,.25)',
+                borderRadius:'8px', padding:'4px 9px', color:'#fbbf24',
+                cursor:'pointer', fontSize:'.75rem', fontWeight:700, fontFamily:'inherit' }}>
+              แก้ไข
+            </button>
+            <button onClick={() => del(item.id)}
+              style={{ background:'rgba(239,68,68,.1)', border:'1px solid rgba(239,68,68,.25)',
+                borderRadius:'8px', padding:'4px 9px', color:'#f87171',
+                cursor:'pointer', fontSize:'.75rem', fontWeight:700, fontFamily:'inherit' }}>
+              ลบ
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {/* ─ Help section ─ */}
+      <div style={{ margin:'16px 14px 0', padding:'14px', background:'rgba(99,102,241,.08)',
+        border:'1px solid rgba(99,102,241,.2)', borderRadius:'14px' }}>
+        <div style={{ color:'#818cf8', fontWeight:800, fontSize:'.82rem', marginBottom:'8px' }}>
+          💡 คำแนะนำ
+        </div>
+        <div style={{ color:'#4d5d8a', fontSize:'.75rem', lineHeight:1.6 }}>
+          • แต่ละโซนต้องมีอย่างน้อย 4 คำจึงจะเล่นได้<br/>
+          • ใส่ Emoji ได้โดยตรง เช่น 🐱 🍎 🏠<br/>
+          • Export เพื่อสำรองข้อมูล, Import เพื่อนำเข้าคลัง<br/>
+          • กด 🔊 เพื่อฟังการออกเสียงภาษาอังกฤษ
+        </div>
+      </div>
+
+      {/* ─ Add/Edit Modal ─ */}
+      {showForm && (
+        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,.9)', zIndex:999,
+          display:'flex', alignItems:'flex-end', justifyContent:'center' }}
+          onClick={() => { setShowForm(false); setEditItem(null); }}>
+          <div className="anim-slide-up"
+            style={{ width:'100%', maxWidth:'480px', background:'#0f1f3d',
+              borderRadius:'24px 24px 0 0', padding:'24px 20px 36px',
+              borderTop:'3px solid #6366f1' }}
+            onClick={e => e.stopPropagation()}>
+
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:'20px' }}>
+              <h3 style={{ color:'white', fontWeight:900, fontSize:'1rem' }}>
+                {editItem ? '✏️ แก้ไขคำศัพท์' : '➕ เพิ่มคำศัพท์ใหม่'}
+              </h3>
+              <button onClick={() => { setShowForm(false); setEditItem(null); }}
+                style={{ background:'rgba(255,255,255,.08)', border:'none', color:'#94a3b8',
+                  borderRadius:'8px', padding:'5px 10px', cursor:'pointer', fontSize:'.9rem' }}>✕</button>
+            </div>
+
+            <div style={{ display:'flex', flexDirection:'column', gap:'14px' }}>
+              {[
+                { key:'emoji', label:'Emoji / รูปสัญลักษณ์', placeholder:'🐱', hint:'วาง emoji จากแป้นพิมพ์หรือ copy มาวาง' },
+                { key:'word',  label:'คำศัพท์ภาษาอังกฤษ *',  placeholder:'Cat' },
+                { key:'thai',  label:'คำแปลภาษาไทย *',        placeholder:'แมว' },
+              ].map(f => (
+                <div key={f.key}>
+                  <label style={{ color:'#64748b', fontSize:'.78rem', fontWeight:700,
+                    display:'block', marginBottom:'6px' }}>{f.label}</label>
+                  <input value={form[f.key]} onChange={e => setForm(p => ({...p, [f.key]: e.target.value}))}
+                    placeholder={f.placeholder} style={iS} />
+                  {f.hint && <div style={{ color:'#2d4070', fontSize:'.7rem', marginTop:'4px' }}>{f.hint}</div>}
+                </div>
+              ))}
+
+              <div>
+                <label style={{ color:'#64748b', fontSize:'.78rem', fontWeight:700,
+                  display:'block', marginBottom:'6px' }}>โซน</label>
+                <select value={form.zone} onChange={e => setForm(p => ({...p, zone: e.target.value}))}
+                  style={{ ...iS, cursor:'pointer' }}>
+                  {ZONES.map(z => <option key={z.id} value={z.id}>{z.emoji} {z.name} — {z.thai}</option>)}
+                </select>
+              </div>
+
+              {/* Preview */}
+              <div style={{ background:'rgba(255,255,255,.04)', border:'1px solid rgba(255,255,255,.07)',
+                borderRadius:'12px', padding:'12px', display:'flex', alignItems:'center', gap:'12px' }}>
+                <span style={{ fontSize:'2rem' }}>{form.emoji || '❓'}</span>
+                <div>
+                  <div style={{ color:'white', fontWeight:800 }}>{form.word || '—'}</div>
+                  <div style={{ color:'#64748b', fontSize:'.8rem' }}>{form.thai || '—'}</div>
+                </div>
+                {form.word && (
+                  <button onClick={() => speak(form.word)}
+                    style={{ marginLeft:'auto', background:'none', border:'none', fontSize:'1.2rem', cursor:'pointer' }}>
+                    🔊
+                  </button>
+                )}
+              </div>
+
+              <div style={{ display:'flex', gap:'10px', marginTop:'4px' }}>
+                <button onClick={() => { setShowForm(false); setEditItem(null); }} style={btnS('#1e2d4a')}>ยกเลิก</button>
+                <button onClick={save}
+                  style={{ ...btnS('#6366f1'), opacity: (!form.word.trim() || !form.thai.trim()) ? .45 : 1 }}>
+                  {editItem ? 'บันทึก' : 'เพิ่มคำ'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─ Import Modal ─ */}
+      {showImport && (
+        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,.9)', zIndex:999,
+          display:'flex', alignItems:'flex-end', justifyContent:'center' }}
+          onClick={() => setShowImport(false)}>
+          <div className="anim-slide-up"
+            style={{ width:'100%', maxWidth:'480px', background:'#0f1f3d',
+              borderRadius:'24px 24px 0 0', padding:'24px 20px 36px',
+              borderTop:'3px solid #f59e0b' }}
+            onClick={e => e.stopPropagation()}>
+            <h3 style={{ color:'white', fontWeight:900, marginBottom:'16px' }}>📥 Import JSON</h3>
+            <div style={{ color:'#64748b', fontSize:'.78rem', marginBottom:'10px' }}>
+              วาง JSON array ของคำศัพท์ (format เดียวกับ Export)
+            </div>
+            <textarea
+              value={importText}
+              onChange={e => setImportText(e.target.value)}
+              rows={7}
+              placeholder={`[\n  {"id":1,"zone":"animal","word":"Cat","thai":"แมว","emoji":"🐱"}\n]`}
+              style={{ ...iS, resize:'none', fontFamily:'monospace', fontSize:'.78rem', lineHeight:1.5 }}
+            />
+            <div style={{ display:'flex', gap:'10px', marginTop:'14px' }}>
+              <button onClick={() => setShowImport(false)} style={btnS('#1e2d4a')}>ยกเลิก</button>
+              <button onClick={doImport} style={btnS('#f59e0b')}>นำเข้า</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════
+   SPLASH SCREEN
+════════════════════════════════════════════ */
+function SplashScreen({ onDone }) {
+  useEffect(() => { const t = setTimeout(onDone, 2200); return () => clearTimeout(t); }, []);
+  return (
+    <div
+      onClick={onDone}
+      style={{ minHeight:'100vh', background:'linear-gradient(180deg,#060d1f,#0c1a3d)',
+        display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+        cursor:'pointer', padding:'30px' }}>
+      <div className="anim-bounce-in" style={{ fontSize:'6rem', marginBottom:'16px', lineHeight:1 }}>🏝️</div>
+      <h1 className="anim-fade-up" style={{ color:'white', fontSize:'1.6rem', fontWeight:900,
+        textAlign:'center', marginBottom:'8px', animationDelay:'.2s',
+        textShadow:'0 0 30px rgba(34,197,94,.5)' }}>
+        Mystic Word Island
+      </h1>
+      <p className="anim-fade-up" style={{ color:'#3d5070', fontSize:'.88rem', textAlign:'center',
+        animationDelay:'.4s', lineHeight:1.6 }}>
+        เกาะลึกลับแห่งปริศนาคำศัพท์<br/>
+        ผจญภัยเรียนภาษาอังกฤษ
+      </p>
+      <div className="anim-fade-up" style={{ marginTop:'32px', color:'#1e2d4a', fontSize:'.75rem',
+        animationDelay:'.8s' }}>
+        แตะเพื่อเริ่ม
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════
+   MAIN APP
+════════════════════════════════════════════ */
+function App() {
+  const [vocabulary, setVocabulary] = useLS('mwi_vocab',    DEFAULT_VOCAB);
+  const [playerData, setPlayerData] = useLS('mwi_player',   { coins: 0 });
+  const [progress,   setProgress]   = useLS('mwi_progress', {});
+
+  const [screen,      setScreen]      = useState('splash');
+  const [activeZone,  setActiveZone]  = useState(null);
+  const [activeLevel, setActiveLevel] = useState(1);
+  const [lastResult,  setLastResult]  = useState(null);
+
+  const handleSelectZone = (zone, level) => {
+    const count = vocabulary.filter(v => v.zone === zone.id).length;
+    if (count < 4) {
+      alert(`โซน "${zone.name}" มีคำศัพท์ ${count} คำ\nต้องการอย่างน้อย 4 คำเพื่อเล่นได้\nกรุณาเพิ่มคำศัพท์ใน Admin Panel`);
+      return;
+    }
+    setActiveZone(zone);
+    setActiveLevel(level);
+    setScreen('gameplay');
+  };
+
+  const handleComplete = result => {
+    setLastResult(result);
+    if (!result.failed) {
+      const stars = result.mistakes.length === 0 ? 3 : result.mistakes.length <= 3 ? 2 : 1;
+      setProgress(prev => ({
+        ...prev,
+        [activeZone.id]: {
+          ...prev[activeZone.id],
+          [`level${activeLevel}`]: {
+            stars: Math.max((prev[activeZone.id]?.[`level${activeLevel}`]?.stars || 0), stars),
+          },
+        },
+      }));
+      setPlayerData(prev => ({ ...prev, coins: (prev.coins || 0) + result.coins }));
+    }
+    setScreen('results');
+  };
+
+  return (
+    <div style={{ width:'100%', maxWidth:'480px', margin:'0 auto', minHeight:'100vh' }}>
+      {screen === 'splash' && <SplashScreen onDone={() => setScreen('home')} />}
+
+      {screen === 'home' && (
+        <HomeScreen
+          vocabulary={vocabulary}
+          playerData={playerData}
+          progress={progress}
+          onSelectZone={handleSelectZone}
+          onAdmin={() => setScreen('admin')}
+        />
+      )}
+
+      {screen === 'gameplay' && activeZone && (
+        <GameplayScreen
+          key={`${activeZone.id}-${activeLevel}-${Date.now()}`}
+          zone={activeZone}
+          level={activeLevel}
+          vocabulary={vocabulary}
+          onComplete={handleComplete}
+          onExit={() => setScreen('home')}
+        />
+      )}
+
+      {screen === 'results' && lastResult && activeZone && (
+        <ResultsScreen
+          zone={activeZone}
+          level={activeLevel}
+          result={lastResult}
+          onPlayAgain={() => { setLastResult(null); setScreen('gameplay'); }}
+          onNextLevel={() => { setActiveLevel(l => l + 1); setLastResult(null); setScreen('gameplay'); }}
+          onGoMap={() => { setLastResult(null); setScreen('home'); }}
+        />
+      )}
+
+      {screen === 'admin' && (
+        <AdminScreen
+          vocabulary={vocabulary}
+          onUpdate={setVocabulary}
+          onBack={() => setScreen('home')}
+        />
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
