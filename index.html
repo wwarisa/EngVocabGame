@@ -12,6 +12,7 @@
   <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
 
@@ -179,11 +180,13 @@ const QUESTIONS_PER_ROUND = 10;
 const BASE_COINS = 10;
 
 const ZONES = [
-  { id:'animal',   name:'Animal Jungle',  thai:'ป่าสัตว์ป่า',             emoji:'🌴', color:'#22c55e', dark:'#14532d' },
-  { id:'food',     name:'Food Village',   thai:'หมู่บ้านเสบียง',           emoji:'🍖', color:'#f97316', dark:'#7c2d12' },
-  { id:'cabin',    name:'Ancient Cabin',  thai:'กระท่อมของใช้',            emoji:'🏚️', color:'#a855f7', dark:'#4a1d96' },
-  { id:'action',   name:'Action River',   thai:'แม่น้ำแห่งการเคลื่อนไหว', emoji:'🌊', color:'#0ea5e9', dark:'#0c4a6e' },
-  { id:'direction',name:'Crossroads',     thai:'ทางแยกบอกทิศ',             emoji:'🧭', color:'#eab308', dark:'#713f12' },
+  { id:'animal',    name:'Animal Jungle',      thai:'ป่าสัตว์ป่า',             emoji:'🌴', color:'#22c55e', dark:'#14532d' },
+  { id:'food',      name:'Food Village',       thai:'หมู่บ้านเสบียง',           emoji:'🍖', color:'#f97316', dark:'#7c2d12' },
+  { id:'cabin',     name:'Ancient Cabin',      thai:'กระท่อมของใช้',            emoji:'🏚️', color:'#a855f7', dark:'#4a1d96' },
+  { id:'action',    name:'Action River',       thai:'แม่น้ำแห่งการเคลื่อนไหว', emoji:'🌊', color:'#0ea5e9', dark:'#0c4a6e' },
+  { id:'direction', name:'Crossroads',         thai:'ทางแยกบอกทิศ',             emoji:'🧭', color:'#eab308', dark:'#713f12' },
+  { id:'rooms',     name:'Mystery Mansion',    thai:'คฤหาสน์ลึกลับ (ห้องต่างๆ)',emoji:'🏠', color:'#ec4899', dark:'#831843' },
+  { id:'furniture', name:'Treasure Chamber',   thai:'ห้องสมบัติ (เฟอร์นิเจอร์)',emoji:'🪄', color:'#14b8a6', dark:'#134e4a' },
 ];
 
 const LEVEL_INFO = [
@@ -247,7 +250,29 @@ const DEFAULT_VOCAB = [
   {id:47,zone:'direction',word:'Turn',   thai:'เลี้ยว',            emoji:'↩️'},
   {id:48,zone:'direction',word:'Fast',   thai:'เร็ว',              emoji:'⚡'},
   {id:49,zone:'direction',word:'Slow',   thai:'ช้า',               emoji:'🐌'},
-  {id:50,zone:'direction',word:'Here',   thai:'ที่นี่',            emoji:'📍'},
+  {id:50,zone:'direction',word:'Here',        thai:'ที่นี่',                    emoji:'📍'},
+  // Rooms & Areas (Mystery Mansion)
+  {id:51,zone:'rooms',    word:'Bedroom',      thai:'ห้องนอน',                   emoji:'🛏️'},
+  {id:52,zone:'rooms',    word:'Bathroom',     thai:'ห้องน้ำ',                   emoji:'🛁'},
+  {id:53,zone:'rooms',    word:'Kitchen',      thai:'ห้องครัว',                  emoji:'🍳'},
+  {id:54,zone:'rooms',    word:'Garage',       thai:'โรงรถ',                     emoji:'🚗'},
+  {id:55,zone:'rooms',    word:'Yard',         thai:'ลานบ้าน / สนามหญ้า',        emoji:'🌳'},
+  {id:56,zone:'rooms',    word:'Stairs',       thai:'บันได',                     emoji:'🪜'},
+  {id:57,zone:'rooms',    word:'Living Room',  thai:'ห้องนั่งเล่น',              emoji:'🏡'},
+  {id:58,zone:'rooms',    word:'Dining Room',  thai:'ห้องรับประทานอาหาร',        emoji:'🥂'},
+  {id:59,zone:'rooms',    word:'Upstairs',     thai:'ชั้นบน',                    emoji:'🔝'},
+  {id:60,zone:'rooms',    word:'Downstairs',   thai:'ชั้นล่าง',                  emoji:'🔽'},
+  // Furniture & Household (Treasure Chamber)
+  {id:61,zone:'furniture',word:'Wardrobe',     thai:'ตู้เสื้อผ้า',               emoji:'👗'},
+  {id:62,zone:'furniture',word:'Blanket',      thai:'ผ้าห่ม',                    emoji:'🧣'},
+  {id:63,zone:'furniture',word:'Cushion',      thai:'หมอนอิง',                   emoji:'🪑'},
+  {id:64,zone:'furniture',word:'Suitcase',     thai:'กระเป๋าเดินทาง',            emoji:'🧳'},
+  {id:65,zone:'furniture',word:'Couch',        thai:'โซฟา',                      emoji:'🛋️'},
+  {id:66,zone:'furniture',word:'Stove',        thai:'เตาทำอาหาร',               emoji:'🔥'},
+  {id:67,zone:'furniture',word:'Oven',         thai:'เตาอบ',                     emoji:'♨️'},
+  {id:68,zone:'furniture',word:'Refrigerator', thai:'ตู้เย็น',                   emoji:'🧊'},
+  {id:69,zone:'furniture',word:'Mattress',     thai:'ที่นอน / ฟูก',              emoji:'💤'},
+  {id:70,zone:'furniture',word:'Carpet',       thai:'พรม',                       emoji:'🟫'},
 ];
 
 /* ════════════════════════════════════════════
@@ -268,14 +293,54 @@ function getOptions(correct, pool) {
   return shuffle([correct, ...wrongs]);
 }
 
-function getMasked(word) {
-  const w = word.toUpperCase();
-  if (w.length <= 2) return w[0] + '_';
-  if (w.length === 3) return w[0] + '_' + w[2];
+function maskWord(w) {
+  const up = w.toUpperCase();
+  if (up.length <= 2) return up[0] + '_';
+  if (up.length === 3) return up[0] + '_' + up[2];
   const inner = [];
-  for (let i = 1; i < w.length - 1; i++) inner.push(i);
-  const hide = shuffle(inner).slice(0, Math.max(1, Math.floor((w.length - 2) * 0.55)));
-  return w.split('').map((c, i) => hide.includes(i) ? '_' : c).join(' ');
+  for (let i = 1; i < up.length - 1; i++) inner.push(i);
+  const hide = shuffle(inner).slice(0, Math.max(1, Math.floor((up.length - 2) * 0.55)));
+  return up.split('').map((c, i) => hide.includes(i) ? '_' : c).join(' ');
+}
+
+function getMasked(word) {
+  return word.split(' ').map(maskWord).join('   ');
+}
+
+/* ── Twemoji image component ── */
+function EmojiImg({ emoji, size = 80, style: extraStyle }) {
+  const [src, setSrc] = useState(null);
+
+  useEffect(() => {
+    if (!window.twemoji) return;
+    let icon = '';
+    window.twemoji.parse(emoji, {
+      callback: (iconCode) => { icon = iconCode; return ''; },
+      base: '', folder: '', ext: '',
+    });
+    if (icon) {
+      setSrc(`https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/${icon}.svg`);
+    }
+  }, [emoji]);
+
+  if (!src) {
+    return (
+      <span style={{ fontSize: size * 0.85 + 'px', lineHeight: 1, display: 'block',
+        filter: 'drop-shadow(0 4px 12px rgba(0,0,0,.5))', ...extraStyle }}>
+        {emoji}
+      </span>
+    );
+  }
+  return (
+    <img
+      src={src}
+      width={size} height={size}
+      alt={emoji}
+      style={{ display: 'block', filter: 'drop-shadow(0 4px 14px rgba(0,0,0,.5))',
+        borderRadius: size * 0.12 + 'px', ...extraStyle }}
+      onError={() => setSrc(null)}
+    />
+  );
 }
 
 let _audioCtx = null;
@@ -400,8 +465,8 @@ function ZoneCard({ zone, isUnlocked, stars, onClick }) {
     >
       {!isUnlocked && <div className="fog" />}
       <div style={{ display:'flex', alignItems:'center', gap:'14px' }}>
-        <div style={{ fontSize:'2.2rem', lineHeight:1, filter: isUnlocked ? 'none' : 'grayscale(1) brightness(.4)' }}>
-          {isUnlocked ? z.emoji : '🔒'}
+        <div style={{ filter: isUnlocked ? 'none' : 'grayscale(1) brightness(.4)' }}>
+          <EmojiImg emoji={isUnlocked ? z.emoji : '🔒'} size={40} />
         </div>
         <div style={{ flex:1 }}>
           <div style={{ color: isUnlocked ? 'white' : '#3d5070', fontWeight:800, fontSize:'.95rem' }}>{zone.name}</div>
@@ -444,7 +509,7 @@ function LevelSelectModal({ zone, progress, onSelect, onClose }) {
       >
         {/* Zone header */}
         <div style={{ display:'flex', alignItems:'center', gap:'12px', marginBottom:'20px' }}>
-          <span style={{ fontSize:'2rem' }}>{z.emoji}</span>
+          <EmojiImg emoji={z.emoji} size={44} />
           <div>
             <div style={{ color:'white', fontWeight:800, fontSize:'1.05rem' }}>{zone.name}</div>
             <div style={{ color:'#64748b', fontSize:'.75rem' }}>{zone.thai}</div>
@@ -687,10 +752,10 @@ function GameplayScreen({ zone, level, vocabulary, onComplete, onExit }) {
           {level === 1 && (
             <>
               <div key={`emoji-${idx}`} className="anim-bounce-in"
-                style={{ fontSize:'5rem', lineHeight:1, filter:'drop-shadow(0 6px 16px rgba(0,0,0,.6))' }}>
-                {q.correct.emoji}
+                style={{ display:'flex', justifyContent:'center' }}>
+                <EmojiImg emoji={q.correct.emoji} size={88} />
               </div>
-              <div style={{ color:'#64748b', fontSize:'.82rem' }}>คำนี้ภาษาอังกฤษว่าอย่างไร?</div>
+              <div style={{ color:'#64748b', fontSize:'.82rem', marginTop:'4px' }}>คำนี้ภาษาอังกฤษว่าอย่างไร?</div>
             </>
           )}
 
@@ -712,8 +777,8 @@ function GameplayScreen({ zone, level, vocabulary, onComplete, onExit }) {
           {level === 3 && (
             <>
               <div key={`emoji-${idx}`} className="anim-bounce-in"
-                style={{ fontSize:'4rem', lineHeight:1 }}>
-                {q.correct.emoji}
+                style={{ display:'flex', justifyContent:'center' }}>
+                <EmojiImg emoji={q.correct.emoji} size={76} />
               </div>
               <div style={{ color:'white', fontSize:'1.7rem', fontWeight:900,
                 letterSpacing:'6px', fontFamily:'monospace', marginTop:'4px' }}>
@@ -848,7 +913,7 @@ function ResultsScreen({ zone, level, result, onPlayAgain, onNextLevel, onGoMap 
               <div key={m.id} style={{ display:'flex', alignItems:'center', gap:'12px',
                 padding:'10px 14px',
                 borderBottom: i < uniqMistakes.length-1 ? '1px solid rgba(255,255,255,.05)' : 'none' }}>
-                <span style={{ fontSize:'1.6rem' }}>{m.emoji}</span>
+                <EmojiImg emoji={m.emoji} size={40} />
                 <div style={{ flex:1 }}>
                   <div style={{ color:'white', fontWeight:800 }}>{m.word}</div>
                   <div style={{ color:'#64748b', fontSize:'.78rem' }}>{m.thai}</div>
@@ -1172,7 +1237,7 @@ function AdminScreen({ vocabulary, onUpdate, onBack }) {
           <div key={item.id} style={{ display:'flex', alignItems:'center', gap:'10px',
             padding:'11px 13px', background:'rgba(255,255,255,.03)',
             border:'1px solid rgba(255,255,255,.055)', borderRadius:'12px', marginBottom:'7px' }}>
-            <span style={{ fontSize:'1.7rem', lineHeight:1 }}>{item.emoji}</span>
+            <EmojiImg emoji={item.emoji} size={38} />
             <div style={{ flex:1, minWidth:0 }}>
               <div style={{ color:'white', fontWeight:800, fontSize:'.92rem' }}>{item.word}</div>
               <div style={{ color:'#3d5070', fontSize:'.75rem' }}>{item.thai}</div>
